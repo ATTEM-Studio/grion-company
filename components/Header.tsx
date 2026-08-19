@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { nav } from "@/content/site";
 import { cn } from "@/lib/utils";
 
@@ -38,9 +39,17 @@ export function Header() {
       <div className="mx-auto flex max-w-[1280px] items-center justify-between px-5 py-4 md:px-8">
         <a
           href="#top"
-          className="focus-ring text-lg font-extrabold tracking-tight text-ink"
+          className="focus-ring inline-flex items-center"
+          aria-label="그리온 홈"
         >
-          {nav.logo}
+          <Image
+            src="/grion-logo.png"
+            alt={nav.logo}
+            width={128}
+            height={27}
+            priority
+            className="h-auto w-[112px] md:w-[128px]"
+          />
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
