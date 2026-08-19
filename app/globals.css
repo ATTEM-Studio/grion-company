@@ -76,12 +76,28 @@ body {
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-base);
+  cursor: url("/grion-cursor.png") 2 2, auto;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   letter-spacing: -0.01em;
   /* Korean must wrap at word boundaries, never mid-syllable-block. */
   word-break: keep-all;
   overflow-wrap: break-word;
+}
+
+/* Keep familiar interaction cues for controls and text inputs. */
+a,
+button,
+[role="button"],
+select,
+summary {
+  cursor: pointer;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  cursor: text;
 }
 
 /* Numbers read as instrument readouts: tabular so digits don't jitter
