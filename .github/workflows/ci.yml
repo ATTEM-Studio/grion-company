@@ -1,0 +1,33 @@
+name: CI
+
+# 푸시와 PR마다 타입체크 · 린트 · 빌드를 돌려서, 깨진 코드가 main에
+# 들어가거나 Vercel 배포가 실패하는 걸 미리 잡습니다.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Lint
+        run: npx eslint .
+
+      # 빌드에는 환경변수가 필요하지 않습니다. 진단 폼 API는 요청 시점에
+      # RESEND_API_KEY를 읽기 때문에, 키 없이도 빌드는 정상 통과합니다.
+      - name: Build
+        run: npm run build

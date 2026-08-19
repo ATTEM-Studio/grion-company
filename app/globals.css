@@ -1,0 +1,321 @@
+@import "tailwindcss";
+
+:root {
+  /* Light backgrounds — cool, near-white, faintly blue-tinted */
+  --bg: #f7f8fc;
+  --bg-alt: #eef1f9;
+  --bg-deep: #e4e9f7;
+
+  /* Dark surfaces — deep navy, used for full-bleed contrast sections */
+  --navy: #141a3d;
+  --navy-deep: #0d1230;
+  --navy-soft: #232a55;
+
+  /* Ink / text */
+  --ink: #10122b;
+  --ink-soft: #4a4f6b;
+  --ink-faint: #858aa3;
+
+  /* Accent: vivid indigo-blue. Carries the "system / instrument" feel
+     without tipping into neon. Used for state, emphasis, and CTAs. */
+  --accent: #2b3fea;
+  --accent-strong: #1c2bbd;
+  --accent-soft: #e5e8fe;
+  --accent-line: #b6bffa;
+
+  /* Signal colors — only for calculator state, never decoration */
+  --signal-ok: #1f8a63;
+  --signal-ok-soft: #e3f4ec;
+  --signal-warn: #b4341f;
+  --signal-warn-soft: #fdeae6;
+
+  --line: #dfe3f0;
+  --line-strong: #c8cee2;
+  --surface: #ffffff;
+
+  --font-base: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, "Apple SD Gothic Neo", "Segoe UI", "Malgun Gothic",
+    system-ui, sans-serif;
+  --font-num: ui-monospace, "SF Mono", "Menlo", "Roboto Mono", monospace;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-alt: var(--bg-alt);
+  --color-bg-deep: var(--bg-deep);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-navy-soft: var(--navy-soft);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-line: var(--accent-line);
+  --color-signal-ok: var(--signal-ok);
+  --color-signal-ok-soft: var(--signal-ok-soft);
+  --color-signal-warn: var(--signal-warn);
+  --color-signal-warn-soft: var(--signal-warn-soft);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-surface: var(--surface);
+  --font-sans: var(--font-base);
+  --font-mono: var(--font-num);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-base);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
+  /* Korean must wrap at word boundaries, never mid-syllable-block. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* Numbers read as instrument readouts: tabular so digits don't jitter
+   while the calculator updates live. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.focus-ring {
+  outline: none;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--accent-strong);
+}
+
+/* ---------------------------------------------------------------
+   Background depth — CSS/SVG only, no WebGL.
+   Gets the "premium instrument" feeling from layered light and a
+   precision grid rather than from a glowing blob. All layers are
+   static (no continuous animation), so there's no scroll jank and
+   nothing competing with the content for attention.
+   --------------------------------------------------------------- */
+
+/* Soft off-axis light washes. Deliberately low-opacity and large —
+   they should read as depth, not as a gradient background. */
+.depth-light {
+  position: relative;
+  isolation: isolate;
+}
+
+.depth-light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      60% 55% at 78% 12%,
+      rgba(43, 63, 234, 0.09) 0%,
+      rgba(43, 63, 234, 0) 70%
+    ),
+    radial-gradient(
+      45% 45% at 8% 82%,
+      rgba(43, 63, 234, 0.05) 0%,
+      rgba(43, 63, 234, 0) 72%
+    );
+}
+
+.depth-dark {
+  position: relative;
+  isolation: isolate;
+  background: var(--navy);
+}
+
+.depth-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      55% 50% at 82% 8%,
+      rgba(74, 96, 255, 0.22) 0%,
+      rgba(74, 96, 255, 0) 68%
+    ),
+    radial-gradient(
+      50% 50% at 12% 92%,
+      rgba(43, 63, 234, 0.16) 0%,
+      rgba(43, 63, 234, 0) 70%
+    );
+}
+
+/* Fine measurement grid — the visual argument that this company
+   measures things. Fades out toward the edges so it never boxes
+   the content in. */
+.grid-lines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(16, 18, 43, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(16, 18, 43, 0.055) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(75% 65% at 50% 40%, #000 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(
+    75% 65% at 50% 40%,
+    #000 0%,
+    transparent 100%
+  );
+}
+
+.grid-lines-dark::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(78% 70% at 50% 45%, #000 0%, transparent 100%);
+  -webkit-mask-image: radial-gradient(
+    78% 70% at 50% 45%,
+    #000 0%,
+    transparent 100%
+  );
+}
+
+/* Panel lift — a calibrated shadow stack for the calculator and
+   other raised surfaces. Cooler and tighter than a default shadow. */
+.panel-lift {
+  box-shadow:
+    0 1px 2px rgba(16, 18, 43, 0.04),
+    0 8px 20px -8px rgba(16, 18, 43, 0.1),
+    0 28px 60px -30px rgba(27, 40, 160, 0.28);
+}
+
+.panel-lift-dark {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 24px 60px -28px rgba(0, 0, 0, 0.65);
+}
+
+/* Slow, single-pass sheen used once on the hero panel border so the
+   surface feels alive on arrival without looping forever. */
+@keyframes edge-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.edge-in {
+  animation: edge-in 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Live pulse dot — small, slow, and only next to genuinely live
+   (recomputing) values. */
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.82);
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+/* Range inputs styled as precision sliders rather than OS default. */
+.range-blue {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--line-strong);
+  outline: none;
+}
+
+.range-blue::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #fff;
+  box-shadow: 0 1px 6px rgba(27, 40, 160, 0.45);
+  cursor: pointer;
+}
+
+.range-blue::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #fff;
+  box-shadow: 0 1px 6px rgba(27, 40, 160, 0.45);
+  cursor: pointer;
+  border-color: #fff;
+}
+
+.range-blue:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
