@@ -1,9 +1,19 @@
+"use client";
+
+import { useState } from "react";
 import { revenueValve } from "@/content/revenueValve";
 import { Reveal } from "./Reveal";
 
 export function GrowthFlow() {
+  const [pressureBoosted, setPressureBoosted] = useState(false);
+
+  const togglePressure = () => setPressureBoosted((value) => !value);
+
   return (
-    <section id="growth-flow" className="rv-section relative scroll-mt-20 overflow-hidden border-b border-line">
+    <section
+      id="growth-flow"
+      className={`rv-section relative scroll-mt-20 overflow-hidden border-b border-line${pressureBoosted ? " rv-pressure-boosted" : ""}`}
+    >
       <div className="rv-ambient rv-ambient-a" aria-hidden="true" />
       <div className="rv-ambient rv-ambient-b" aria-hidden="true" />
 
@@ -88,6 +98,15 @@ export function GrowthFlow() {
               strokeDasharray="3 15"
               className="rv-pipe-signal"
             />
+            <path
+              d="M 72 345 C 200 345, 240 320, 350 320 S 520 350, 635 338 S 805 272, 1038 275"
+              fill="none"
+              stroke="rgba(191,235,255,.95)"
+              strokeWidth="5"
+              strokeLinecap="round"
+              strokeDasharray="16 38"
+              className="rv-pipe-pressure-wave"
+            />
           </svg>
 
           <div className="rv-mobile-pipe" aria-hidden="true"><span /></div>
@@ -132,14 +151,27 @@ export function GrowthFlow() {
             );
           })}
 
-          <div className="rv-flow-caption" aria-hidden="true">
+          <div className="rv-flow-caption" aria-live="polite">
             <span />
-            CUSTOMER FLOW
+            {pressureBoosted ? "HIGH PRESSURE FLOW" : "CUSTOMER FLOW"}
           </div>
         </div>
 
         <Reveal delayMs={600} className="mt-7 md:mt-10">
-          <div className="rv-pressure">
+          <div
+            className="rv-pressure"
+            role="button"
+            tabIndex={0}
+            aria-pressed={pressureBoosted}
+            aria-label={pressureBoosted ? "객단가 수압을 원래대로 낮추기" : "객단가 수압을 높여 매출 흐름 변화 보기"}
+            onClick={togglePressure}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                togglePressure();
+              }
+            }}
+          >
             <div className="rv-pressure-glow" aria-hidden="true" />
             <div className="rv-gauge" aria-hidden="true">
               <svg viewBox="0 0 180 180">
@@ -163,10 +195,11 @@ export function GrowthFlow() {
               </div>
             </div>
 
-            <div className="rv-pressure-note">
-              <span>FLOW FIRST</span>
-              <strong>밸브를 먼저 열고</strong>
-              <b>그다음 수압을 높입니다.</b>
+            <div className="rv-pressure-note" aria-live="polite">
+              <span>{pressureBoosted ? "PRESSURE UP" : "FLOW FIRST"}</span>
+              <strong>{pressureBoosted ? "수압 상승 중" : "밸브를 먼저 열고"}</strong>
+              <b>{pressureBoosted ? "같은 흐름의 매출 폭이 커집니다." : "그다음 수압을 높입니다."}</b>
+              <em>{pressureBoosted ? "다시 눌러 원래대로" : "눌러서 수압 올리기"}</em>
             </div>
           </div>
         </Reveal>
@@ -255,23 +288,58 @@ export function GrowthFlow() {
           box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 30px 80px rgba(29,45,92,.07);
           overflow:hidden;
           backdrop-filter:blur(18px);
+          transition:box-shadow .55s ease,border-color .55s ease,background .55s ease;
+        }
+        .rv-pressure-boosted .rv-canvas{
+          border-color:rgba(104,160,255,.36);
+          background:radial-gradient(circle at 55% 47%,rgba(92,176,255,.16),transparent 38%),linear-gradient(145deg,rgba(255,255,255,.9),rgba(242,248,255,.72));
+          box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 34px 90px rgba(38,74,170,.12),0 0 60px rgba(72,159,255,.08);
         }
         .rv-canvas::before{
           content:"";position:absolute;inset:0;
-          background:
-            linear-gradient(115deg,transparent 0 35%,rgba(255,255,255,.65) 43%,transparent 51%) -280px 0 / 280px 100% no-repeat;
+          background:linear-gradient(115deg,transparent 0 35%,rgba(255,255,255,.65) 43%,transparent 51%) -280px 0 / 280px 100% no-repeat;
           animation:rvGlassSweep 8s ease-in-out infinite;
           pointer-events:none;
         }
         .rv-pipeline{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-        .rv-pipe-core{filter:drop-shadow(0 8px 14px rgba(49,91,255,.24))}
-        .rv-pipe-signal{animation:rvSignal 2.8s linear infinite}
+        .rv-pipe-core{
+          filter:drop-shadow(0 8px 14px rgba(49,91,255,.24));
+          transition:stroke-width .55s cubic-bezier(.2,.8,.2,1),filter .55s ease;
+        }
+        .rv-pipe-signal{
+          animation:rvSignal 2.8s linear infinite;
+          transition:stroke-width .45s ease,filter .45s ease,opacity .45s ease;
+        }
+        .rv-pipe-pressure-wave{
+          opacity:0;
+          animation:rvPressureWave 1.2s linear infinite;
+          transition:opacity .45s ease,stroke-width .45s ease,filter .45s ease;
+        }
+        .rv-pressure-boosted .rv-pipe-core{
+          stroke-width:26px;
+          filter:drop-shadow(0 8px 18px rgba(49,91,255,.42)) drop-shadow(0 0 18px rgba(127,215,255,.42));
+        }
+        .rv-pressure-boosted .rv-pipe-signal{
+          animation-duration:.8s;
+          stroke-width:7px;
+          stroke-dasharray:9 18;
+          filter:drop-shadow(0 0 8px rgba(255,255,255,.9));
+        }
+        .rv-pressure-boosted .rv-pipe-pressure-wave{
+          opacity:.88;
+          stroke-width:8px;
+          animation-duration:.8s;
+          filter:drop-shadow(0 0 11px rgba(127,215,255,.75));
+        }
         .rv-mobile-pipe{display:none}
         .rv-flow-caption{
           position:absolute;left:50%;bottom:26px;transform:translateX(-50%);
           display:flex;align-items:center;gap:8px;color:#9aa4c3;font-size:8px;font-weight:900;letter-spacing:.17em;
+          transition:color .4s ease,letter-spacing .4s ease;
         }
-        .rv-flow-caption span{width:38px;height:1px;background:linear-gradient(90deg,transparent,#315bff)}
+        .rv-flow-caption span{width:38px;height:1px;background:linear-gradient(90deg,transparent,#315bff);transition:width .4s ease,box-shadow .4s ease}
+        .rv-pressure-boosted .rv-flow-caption{color:#315bff;letter-spacing:.2em}
+        .rv-pressure-boosted .rv-flow-caption span{width:58px;box-shadow:0 0 8px rgba(49,91,255,.4)}
         .rv-step{position:absolute;width:245px;z-index:3}
         .rv-step-1{left:1.5%;top:303px}
         .rv-step-2{left:26.6%;top:65px}
@@ -284,14 +352,13 @@ export function GrowthFlow() {
         .rv-step-down .rv-valve-wrap{order:1}
         .rv-step-down .rv-connector{order:2}
         .rv-step-down .rv-card{order:3}
-        .rv-connector{
-          width:2px;height:27px;background:linear-gradient(#9eb4ed,#315bff);opacity:.8;
-        }
+        .rv-connector{width:2px;height:27px;background:linear-gradient(#9eb4ed,#315bff);opacity:.8}
         .rv-valve-wrap{position:relative;width:68px;height:68px;flex:0 0 68px;display:grid;place-items:center}
         .rv-valve-halo{
           position:absolute;inset:-11px;border-radius:50%;border:1px solid rgba(49,91,255,.16);
           box-shadow:0 0 0 0 rgba(49,91,255,.14);animation:rvHalo 3.8s ease-out infinite;
         }
+        .rv-pressure-boosted .rv-valve-halo{animation-duration:1.5s;border-color:rgba(87,167,255,.36)}
         .rv-valve-wheel{
           position:relative;width:64px;height:64px;border-radius:50%;
           background:linear-gradient(150deg,rgba(255,255,255,.96),rgba(227,235,255,.84));
@@ -300,6 +367,7 @@ export function GrowthFlow() {
           transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease;
           backdrop-filter:blur(10px);
         }
+        .rv-pressure-boosted .rv-valve-wheel{animation:rvValvePressure 1.5s ease-in-out infinite;box-shadow:0 15px 32px rgba(30,50,120,.2),0 0 24px rgba(73,153,255,.22)}
         .rv-valve-bar{position:absolute;left:50%;top:50%;background:#315bff;border-radius:999px;transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(49,91,255,.22)}
         .rv-valve-bar-x{width:36px;height:5px}.rv-valve-bar-y{width:5px;height:36px}
         .rv-valve-center{position:absolute;left:50%;top:50%;width:11px;height:11px;border-radius:50%;background:#10163f;transform:translate(-50%,-50%);box-shadow:0 0 0 4px rgba(49,91,255,.12)}
@@ -328,41 +396,64 @@ export function GrowthFlow() {
           padding:30px 34px;border:1px solid rgba(147,167,255,.22);border-radius:28px;overflow:hidden;
           background:linear-gradient(125deg,#0b1135 0%,#11194a 54%,#17205b 100%);color:#fff;
           box-shadow:0 28px 70px rgba(12,20,60,.18),inset 0 1px 0 rgba(255,255,255,.07);
+          cursor:pointer;user-select:none;
+          transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s ease,box-shadow .4s ease,background .4s ease;
+        }
+        .rv-pressure:hover{transform:translateY(-3px);border-color:rgba(127,164,255,.42);box-shadow:0 34px 82px rgba(12,20,60,.22),0 0 0 1px rgba(95,130,255,.06)}
+        .rv-pressure:focus-visible{outline:3px solid rgba(97,139,255,.72);outline-offset:4px}
+        .rv-pressure-boosted .rv-pressure{
+          border-color:rgba(119,191,255,.62);
+          background:linear-gradient(125deg,#0c133c 0%,#162362 52%,#173776 100%);
+          box-shadow:0 34px 86px rgba(12,20,60,.25),0 0 40px rgba(75,148,255,.18),inset 0 1px 0 rgba(255,255,255,.1);
         }
         .rv-pressure::after{
           content:"";position:absolute;inset:0;pointer-events:none;
           background:linear-gradient(105deg,transparent 0 40%,rgba(255,255,255,.055) 48%,transparent 56%) -320px 0 / 320px 100% no-repeat;
           animation:rvGlassSweep 7s 1.2s ease-in-out infinite;
         }
-        .rv-pressure-glow{position:absolute;width:330px;height:330px;left:-80px;top:-80px;border-radius:50%;background:radial-gradient(circle,rgba(65,94,255,.36),transparent 68%);filter:blur(4px);pointer-events:none}
+        .rv-pressure-boosted .rv-pressure::after{animation-duration:2.2s;background-image:linear-gradient(105deg,transparent 0 38%,rgba(142,218,255,.14) 48%,transparent 58%)}
+        .rv-pressure-glow{position:absolute;width:330px;height:330px;left:-80px;top:-80px;border-radius:50%;background:radial-gradient(circle,rgba(65,94,255,.36),transparent 68%);filter:blur(4px);pointer-events:none;transition:transform .5s ease,opacity .5s ease}
+        .rv-pressure-boosted .rv-pressure-glow{transform:scale(1.28);opacity:1;background:radial-gradient(circle,rgba(74,155,255,.5),transparent 68%)}
         .rv-gauge{position:relative;z-index:2;width:170px;height:170px;display:grid;place-items:center}
         .rv-gauge svg{width:100%;height:100%;overflow:visible}
         .rv-gauge-track{fill:none;stroke:rgba(255,255,255,.1);stroke-width:14}
         .rv-gauge-meter{fill:none;stroke:#4d67ff;stroke-width:14;stroke-linecap:round;filter:drop-shadow(0 0 10px rgba(77,103,255,.55));stroke-dasharray:265;stroke-dashoffset:265;animation:rvGaugeFill 2s .35s cubic-bezier(.16,1,.3,1) forwards}
         .rv-gauge-needle{transform-origin:90px 91px;transform:rotate(-38deg);animation:rvNeedle 2s .35s cubic-bezier(.16,1,.3,1) forwards}
+        .rv-pressure-boosted .rv-gauge-meter{stroke:#77d6ff;animation:rvGaugeBoost .55s cubic-bezier(.16,1,.3,1) forwards;filter:drop-shadow(0 0 15px rgba(119,214,255,.76))}
+        .rv-pressure-boosted .rv-gauge-needle{animation:rvNeedleBoost .55s cubic-bezier(.16,1,.3,1) forwards}
         .rv-gauge-needle line{stroke:#fff;stroke-width:5;stroke-linecap:round}.rv-gauge-needle circle{fill:#fff;filter:drop-shadow(0 0 8px rgba(255,255,255,.35))}
         .rv-gauge>span{position:absolute;bottom:9px;font-size:7px;font-weight:900;letter-spacing:.18em;color:rgba(255,255,255,.45)}
         .rv-pressure-copy{position:relative;z-index:2}
-        .rv-pressure-copy>span{font-size:8px;font-weight:900;letter-spacing:.16em;color:#7287ff}
+        .rv-pressure-copy>span{font-size:8px;font-weight:900;letter-spacing:.16em;color:#7287ff}.rv-pressure-boosted .rv-pressure-copy>span{color:#8ddcff}
         .rv-pressure-copy h3{margin:5px 0 4px;font-size:30px;font-weight:950;letter-spacing:-.045em}
         .rv-pressure-copy>strong{font-size:13px}.rv-pressure-copy>p{margin:9px 0 0;max-width:620px;font-size:11.5px;line-height:1.75;color:rgba(255,255,255,.62)}
         .rv-pressure-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:13px}.rv-pressure-chips span{padding:5px 7px;border-radius:999px;background:rgba(255,255,255,.07);color:rgba(255,255,255,.68);font-size:8.5px;font-weight:800}
-        .rv-pressure-note{position:relative;z-index:2;padding:18px;border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.045);backdrop-filter:blur(12px)}
-        .rv-pressure-note span{font-size:7px;font-weight:900;letter-spacing:.17em;color:#7087ff}.rv-pressure-note strong,.rv-pressure-note b{display:block}.rv-pressure-note strong{margin-top:10px;font-size:12px;color:rgba(255,255,255,.68)}.rv-pressure-note b{margin-top:3px;font-size:14px;color:#fff}
+        .rv-pressure-note{position:relative;z-index:2;padding:18px;border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.045);backdrop-filter:blur(12px);transition:border-color .4s ease,background .4s ease,transform .4s ease}
+        .rv-pressure-boosted .rv-pressure-note{border-color:rgba(131,218,255,.32);background:rgba(96,181,255,.1);transform:scale(1.02)}
+        .rv-pressure-note span{font-size:7px;font-weight:900;letter-spacing:.17em;color:#7087ff}.rv-pressure-boosted .rv-pressure-note span{color:#8edfff}
+        .rv-pressure-note strong,.rv-pressure-note b{display:block}.rv-pressure-note strong{margin-top:10px;font-size:12px;color:rgba(255,255,255,.68)}.rv-pressure-note b{margin-top:3px;font-size:14px;color:#fff}
+        .rv-pressure-note em{display:block;margin-top:12px;font-size:8px;font-style:normal;font-weight:800;color:rgba(255,255,255,.36);letter-spacing:.03em}.rv-pressure-boosted .rv-pressure-note em{color:rgba(159,225,255,.72)}
         .rv-rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
         .rv-rule{display:flex;gap:15px;padding:18px 19px;border-top:1px solid #d9deed;background:rgba(255,255,255,.42)}
         .rv-rule>span{color:#315bff;font-size:9px;font-weight:900}.rv-rule h3{margin:0;font-size:13px;font-weight:900;color:#161a38}.rv-rule p{margin:5px 0 0;font-size:10.5px;line-height:1.65;color:#737a94}
         .rv-closing{text-align:center}.rv-closing>span{font-size:12px;font-weight:750;color:#6f7691}.rv-closing>strong{display:block;margin-top:5px;font-size:clamp(25px,3vw,38px);font-weight:950;letter-spacing:-.05em;color:#111531}.rv-closing>p{margin:9px 0 0;font-size:13px;font-weight:850;color:#315bff}
         @keyframes rvSignal{to{stroke-dashoffset:-72}}
+        @keyframes rvPressureWave{to{stroke-dashoffset:-108}}
         @keyframes rvHalo{0%{box-shadow:0 0 0 0 rgba(49,91,255,.15);opacity:.8}70%{box-shadow:0 0 0 14px rgba(49,91,255,0);opacity:.15}100%{box-shadow:0 0 0 0 rgba(49,91,255,0);opacity:0}}
+        @keyframes rvValvePressure{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(8deg) scale(1.045)}}
         @keyframes rvGlassSweep{0%,22%{background-position:-320px 0}58%,100%{background-position:calc(100% + 320px) 0}}
         @keyframes rvGaugeFill{to{stroke-dashoffset:62}}
         @keyframes rvNeedle{to{transform:rotate(18deg)}}
+        @keyframes rvGaugeBoost{to{stroke-dashoffset:18}}
+        @keyframes rvNeedleBoost{to{transform:rotate(50deg)}}
         @media(max-width:980px){
           .rv-canvas{height:auto;padding:42px 20px 42px 76px;overflow:visible}
           .rv-pipeline,.rv-flow-caption{display:none}
-          .rv-mobile-pipe{display:block;position:absolute;left:45px;top:58px;bottom:58px;width:10px;border-radius:999px;background:rgba(180,194,228,.44);overflow:hidden}
+          .rv-mobile-pipe{display:block;position:absolute;left:45px;top:58px;bottom:58px;width:10px;border-radius:999px;background:rgba(180,194,228,.44);overflow:hidden;transition:width .45s ease,box-shadow .45s ease,left .45s ease}
           .rv-mobile-pipe span{display:block;width:100%;height:100%;background:linear-gradient(#315bff,#7fd7ff 70%,#315bff);transform-origin:top;animation:rvMobileFlow 2.8s cubic-bezier(.16,1,.3,1) both}
+          .rv-mobile-pipe::after{content:"";position:absolute;left:16%;right:16%;top:-26%;height:24%;border-radius:999px;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.95),transparent);filter:drop-shadow(0 0 7px rgba(255,255,255,.65));animation:rvMobileSignal 2.8s linear infinite}
+          .rv-pressure-boosted .rv-mobile-pipe{left:42px;width:16px;box-shadow:0 0 18px rgba(83,170,255,.38)}
+          .rv-pressure-boosted .rv-mobile-pipe::after{height:30%;animation-duration:.8s;filter:drop-shadow(0 0 12px rgba(255,255,255,.92))}
           .rv-step{position:relative;left:auto;top:auto;width:100%;margin:0 0 26px}
           .rv-step:last-of-type{margin-bottom:0}
           .rv-step-stack{display:block}
@@ -371,21 +462,24 @@ export function GrowthFlow() {
           .rv-connector{display:none}
           .rv-card{width:100%;min-height:0;padding:18px}
           .rv-chips{max-height:45px;opacity:1;transform:none}
-          .rv-pressure{grid-template-columns:150px minmax(0,1fr);gap:20px}.rv-pressure-note{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:14px}.rv-pressure-note strong,.rv-pressure-note b{display:inline;margin:0}
+          .rv-pressure{grid-template-columns:150px minmax(0,1fr);gap:20px}.rv-pressure-note{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:14px}.rv-pressure-note strong,.rv-pressure-note b{display:inline;margin:0}.rv-pressure-note em{margin:0;white-space:nowrap}
           @keyframes rvMobileFlow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+          @keyframes rvMobileSignal{from{transform:translateY(0)}to{transform:translateY(520%)}}
         }
         @media(max-width:640px){
           .rv-section::before{background-size:42px 42px;opacity:.75}
           .rv-formula{display:block;border-radius:20px;padding:14px}.rv-formula-label{display:block;margin-bottom:9px}.rv-formula-flow{gap:5px}.rv-formula-flow b{padding:6px 8px;font-size:9px}.rv-formula-pressure{display:block;margin-top:10px;padding:9px 0 0;border-left:0;border-top:1px solid #e0e4ef}
-          .rv-canvas{margin-left:-5px;margin-right:-5px;padding:36px 14px 36px 67px;border-radius:26px}.rv-mobile-pipe{left:38px;top:50px;bottom:50px;width:8px}.rv-valve-wrap{left:-56px;top:18px}
+          .rv-canvas{margin-left:-5px;margin-right:-5px;padding:36px 14px 36px 67px;border-radius:26px}.rv-mobile-pipe{left:38px;top:50px;bottom:50px;width:8px}.rv-pressure-boosted .rv-mobile-pipe{left:35px;width:14px}
+          .rv-valve-wrap{left:-56px;top:18px}
           .rv-card h3{font-size:21px}.rv-card>p{font-size:11px}
-          .rv-pressure{grid-template-columns:1fr;padding:24px 20px;text-align:left}.rv-gauge{width:145px;height:145px;margin:auto}.rv-pressure-note{display:block}.rv-pressure-note strong,.rv-pressure-note b{display:block}.rv-pressure-note strong{margin-top:9px}.rv-pressure-note b{margin-top:2px}
+          .rv-pressure{grid-template-columns:1fr;padding:24px 20px;text-align:left}.rv-gauge{width:145px;height:145px;margin:auto}.rv-pressure-note{display:block}.rv-pressure-note strong,.rv-pressure-note b{display:block}.rv-pressure-note strong{margin-top:9px}.rv-pressure-note b{margin-top:2px}.rv-pressure-note em{margin-top:10px}
           .rv-rules{grid-template-columns:1fr;gap:0}.rv-rule{background:transparent;padding:16px 4px}
           .rv-closing{text-align:left}.rv-closing>strong{font-size:27px;line-height:1.3}
         }
         @media(prefers-reduced-motion:reduce){
-          .rv-pipe-signal,.rv-valve-halo,.rv-canvas::before,.rv-pressure::after,.rv-gauge-meter,.rv-gauge-needle,.rv-mobile-pipe span{animation:none!important}
+          .rv-pipe-signal,.rv-pipe-pressure-wave,.rv-valve-halo,.rv-valve-wheel,.rv-canvas::before,.rv-pressure::after,.rv-gauge-meter,.rv-gauge-needle,.rv-mobile-pipe span,.rv-mobile-pipe::after{animation:none!important}
           .rv-gauge-meter{stroke-dashoffset:62}.rv-gauge-needle{transform:rotate(18deg)}
+          .rv-pressure-boosted .rv-gauge-meter{stroke-dashoffset:18}.rv-pressure-boosted .rv-gauge-needle{transform:rotate(50deg)}
         }
       `}</style>
     </section>
