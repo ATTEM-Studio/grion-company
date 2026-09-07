@@ -1,6 +1,6 @@
 name: CI
 
-# 푸시와 PR마다 타입체크 · 린트 · 빌드를 돌려서, 깨진 코드가 main에
+# 푸시와 PR마다 테스트 · 타입체크 · 린트 · 빌드를 돌려서, 깨진 코드가 main에
 # 들어가거나 Vercel 배포가 실패하는 걸 미리 잡습니다.
 on:
   push:
@@ -20,6 +20,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Test
+        run: npm test
 
       - name: Type check
         run: npx tsc --noEmit
