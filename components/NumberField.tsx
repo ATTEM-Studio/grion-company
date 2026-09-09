@@ -39,7 +39,7 @@ export function NumberField({
   const handle = (raw: string) => {
     const digits = raw.replace(/[^\d]/g, "");
     if (digits === "") {
-      onChange(0);
+      onChange(NaN);
       return;
     }
     let next = Number.parseInt(digits, 10);
@@ -61,8 +61,7 @@ export function NumberField({
         inputMode="numeric"
         autoComplete="off"
         aria-label={ariaLabel ?? label}
-        value={value === 0 ? "" : value.toLocaleString("ko-KR")}
-        placeholder="0"
+        value={Number.isFinite(value) ? value.toLocaleString("ko-KR") : ""}
         onChange={(e) => handle(e.target.value)}
         onFocus={(e) => e.currentTarget.select()}
         className={cn(

@@ -29,6 +29,10 @@
  */
 
 export type GrowthInputs = {
+  /** 직접 입력한 현재 월매출. NaN은 미입력, 0원은 실제 입력값입니다. */
+  currentRevenue?: number;
+  /** 목표 기간의 영업일 수. 하루 결제 목표 계산에 사용합니다. */
+  operatingDays?: number;
   /** 월 노출 수 — 선택 입력 */
   impressions: number;
   /** 월 유입 수 — 선택 입력 */
@@ -101,7 +105,7 @@ export type Stage = {
   label: string;
   question: string;
   value: number;
-  unit: "명" | "원" | "%";
+  unit: "명" | "건" | "원" | "%";
   /** true면 비워둬도 나머지 계산이 정상 동작합니다. */
   optional: boolean;
   /**
@@ -121,7 +125,7 @@ export type Lever = {
   current: number;
   /** 이 지표 하나로 목표에 도달하려면 얼마가 되어야 하는가. 불가능하면 null. */
   required: number | null;
-  unit: "명" | "원" | "%";
+  unit: "명" | "건" | "원" | "%";
   /** 100%를 넘어야 해서 이 지표 단독으로는 목표 달성이 불가능한 경우. */
   impossible: boolean;
   /**
@@ -144,7 +148,7 @@ export type GrowthResult = {
   levers: Lever[];
   weakestStage: Stage | null;
   repeatCustomers: number;
-  /** 방문·객단가·목표가 모두 있어 매출 계산이 가능한 상태. */
+  /** 현재·목표매출이 있어 매출 차이를 계산할 수 있는 상태. */
   canCompute: boolean;
   /** 노출·유입이 모두 있어 퍼널 전환율을 볼 수 있는 상태. */
   hasFunnelData: boolean;
@@ -176,19 +180,30 @@ export function computeGrowth(raw: GrowthInputs): GrowthResult {
   const rawVisits = clean(raw.visits);
   const visits = impressions > 0 ? Math.min(rawVisits, impressions) : rawVisits;
   const rawCustomers = clean(raw.customers);
-  const customers = visits > 0 ? Math.min(rawCustomers, visits) : rawCustomers;
   const aov = clean(raw.aov);
-  const repeatRate = Math.min(Math.max(raw.repeatRate, 0), 100);
+  const hasEnteredRevenue =
+    typeof raw.currentRevenue === "number" &&
+    Number.isFinite(raw.currentRevenue) &&
+    raw.currentRevenue >= 0;
+  const enteredRevenue = hasEnteredRevenue ? raw.currentRevenue! : 0;
+  // Direct revenue is authoritative. Estimated transactions are not visitors
+  // and must never be clamped to an unrelated channel's traffic.
+  const customers = hasEnteredRevenue
+    ? aov > 0 ? enteredRevenue / aov : 0
+    : visits > 0 ? Math.min(rawCustomers, visits) : rawCustomers;
+  const repeatRate = Number.isFinite(raw.repeatRate)
+    ? Math.min(Math.max(raw.repeatRate, 0), 100)
+    : 0;
   const goalRevenue = clean(raw.goalRevenue);
 
-  const currentRevenue = customers * aov;
+  const currentRevenue = hasEnteredRevenue ? enteredRevenue : customers * aov;
 
   // 매출 계산에 꼭 필요한 것은 이 셋뿐입니다.
-  const canCompute = customers > 0 && aov > 0 && goalRevenue > 0;
-  const hasFunnelData = impressions > 0 && visits > 0;
+  const canCompute = (hasEnteredRevenue || (customers > 0 && aov > 0)) && goalRevenue > 0;
+  const hasFunnelData = !hasEnteredRevenue && impressions > 0 && visits > 0;
 
   const clickRate = hasFunnelData ? safeDiv(visits, impressions) : null;
-  const visitRate = visits > 0 && customers > 0 ? safeDiv(customers, visits) : null;
+  const visitRate = !hasEnteredRevenue && visits > 0 && customers > 0 ? safeDiv(customers, visits) : null;
   const repeatFraction = repeatRate > 0 ? repeatRate / 100 : null;
 
   const gap = Math.max(0, goalRevenue - currentRevenue);
@@ -221,10 +236,10 @@ export function computeGrowth(raw: GrowthInputs): GrowthResult {
     {
       key: "customers",
       no: "03",
-      label: "방문",
+      label: hasEnteredRevenue ? "결제 건수 (추정)" : "방문",
       question: "선택으로 이어졌는가",
       value: customers,
-      unit: "명",
+      unit: hasEnteredRevenue ? "건" : "명",
       optional: false,
       rate: visitRate,
       rateLabel: "유입 → 방문",
@@ -297,7 +312,7 @@ export function computeGrowth(raw: GrowthInputs): GrowthResult {
   };
 
   // 데이터가 적으면 레버도 적게. 없는 숫자로 만든 레버는 보여주지 않습니다.
-  const levers: Lever[] = hasFunnelData
+  const levers: Lever[] = !canCompute || aov <= 0 || goalReached || currentRevenue <= 0 ? [] : hasFunnelData
     ? [
         buildLever("impressions", "노출 수", impressions, "명", null),
         buildLever("clickRate", "유입률", (clickRate ?? 0) * 100, "%", 100),
@@ -305,14 +320,17 @@ export function computeGrowth(raw: GrowthInputs): GrowthResult {
         buildLever("aov", "객단가", aov, "원", null),
       ]
     : [
-        buildLever("customers", "월 방문 수", customers, "명", null),
-        buildLever("aov", "객단가", aov, "원", null),
+        {
+          ...buildLever("customers", hasEnteredRevenue ? "월 결제 건수 (추정)" : "월 방문 수", customers, hasEnteredRevenue ? "건" : "명", null),
+          required: goalRevenue / aov,
+        },
+        buildLever("aov", hasEnteredRevenue ? "평균 결제금액" : "객단가", aov, "원", null),
       ];
 
   const rent = clean(raw.rent);
 
   let standards: Standards | null = null;
-  if (canCompute) {
+  if (canCompute && aov > 0 && Number.isFinite(raw.rent) && raw.rent >= 0) {
     const fixedCostCeiling = goalRevenue * GRION_STANDARDS.fixedCostRatio;
     const marketingBudget = fixedCostCeiling - rent;
     const budgetOverrun = marketingBudget <= 0;
@@ -390,5 +408,5 @@ export function formatLeverValue(value: number, unit: Lever["unit"]): string {
     return value < 1_000_000 ? `${formatNumber(value)}원` : formatWon(value);
   }
   if (unit === "%") return formatPercentValue(value);
-  return `${formatNumber(value)}명`;
+  return `${formatNumber(value)}${unit}`;
 }

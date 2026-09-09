@@ -12,11 +12,29 @@ export function MobileStickyCta() {
       const passedHero = window.scrollY > window.innerHeight * 0.7;
       const nearBottom =
         window.innerHeight + window.scrollY > document.documentElement.scrollHeight - 200;
-      setVisible(passedHero && !nearBottom);
+      const calculator = document.getElementById("growth-calculator")?.getBoundingClientRect();
+      const calculatorVisible = calculator && calculator.top < window.innerHeight && calculator.bottom > 0;
+      const editing = document.activeElement instanceof HTMLElement &&
+        document.activeElement.matches("input, textarea, select, [contenteditable=true]");
+      setVisible(passedHero && !nearBottom && !calculatorVisible && !editing);
+    };
+    let focusFrame = 0;
+    const onFocusChange = () => {
+      cancelAnimationFrame(focusFrame);
+      focusFrame = requestAnimationFrame(onScroll);
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    document.addEventListener("focusin", onFocusChange);
+    document.addEventListener("focusout", onFocusChange);
+    return () => {
+      cancelAnimationFrame(focusFrame);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      document.removeEventListener("focusin", onFocusChange);
+      document.removeEventListener("focusout", onFocusChange);
+    };
   }, []);
 
   return (

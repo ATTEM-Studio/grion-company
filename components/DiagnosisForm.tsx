@@ -5,7 +5,8 @@ import { diagnosisForm as f } from "@/content/site";
 import { cn } from "@/lib/utils";
 import { BOTTLENECK_SELECTED_EVENT, type BottleneckSelectedDetail } from "@/lib/events";
 import { useGrowth } from "@/lib/growth-context";
-import { formatNumber, formatWon } from "@/lib/growth";
+import { formatNumber } from "@/lib/growth";
+import { formatPlanMoney } from "@/lib/growth-planner";
 import { Reveal } from "./Reveal";
 
 type RequiredField = "name" | "company" | "industry" | "region" | "contact" | "concern";
@@ -80,13 +81,13 @@ export function DiagnosisForm() {
   const carriedNumbers =
     touched && result.canCompute
       ? {
-          revenueCurrent: formatWon(result.currentRevenue),
-          revenueGoal: formatWon(inputs.goalRevenue),
-          volume: `노출 ${formatNumber(inputs.impressions)} · 유입 ${formatNumber(
-            inputs.visits
-          )} · 방문 ${formatNumber(inputs.customers)}`,
-          aovEntered: `${formatNumber(inputs.aov)}원`,
-          repeat: `재방문율 ${inputs.repeatRate}%`,
+          revenueCurrent: formatPlanMoney(result.currentRevenue),
+          revenueGoal: formatPlanMoney(inputs.goalRevenue),
+          volume: Number.isFinite(inputs.currentRevenue) && inputs.aov > 0
+            ? `월 결제 건수 약 ${formatNumber(result.currentRevenue / inputs.aov)}건 (매출과 평균 결제금액으로 추정)`
+            : "",
+          aovEntered: Number.isFinite(inputs.aov) && inputs.aov > 0 ? `${formatNumber(inputs.aov)}원` : "",
+          repeat: Number.isFinite(inputs.repeatRate) ? `재방문율 ${inputs.repeatRate}%` : "",
           bottleneck: result.weakestStage
             ? `${result.weakestStage.label} 구간 (계산기 기준)`
             : "",

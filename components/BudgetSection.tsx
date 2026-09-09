@@ -2,6 +2,7 @@
 
 import { useGrowth } from "@/lib/growth-context";
 import { formatNumber, formatWon, GRION_STANDARDS } from "@/lib/growth";
+import { roundUpTarget } from "@/lib/growth-planner";
 import { budget as copy } from "@/content/site";
 import { cn } from "@/lib/utils";
 import { NumberField } from "./NumberField";
@@ -23,6 +24,7 @@ import { Reveal } from "./Reveal";
 export function BudgetSection() {
   const { inputs, setInput, result } = useGrowth();
   const { standards, canCompute, goalReached } = result;
+  const hasEnteredRevenue = Number.isFinite(inputs.currentRevenue);
 
   return (
     <section
@@ -61,7 +63,7 @@ export function BudgetSection() {
           <span className="text-[12px] text-ink-faint">{copy.rentHint}</span>
         </Reveal>
 
-        {!canCompute ? (
+        {!canCompute || !standards ? (
           <Reveal delayMs={220} className="mt-8 max-w-xl text-[15px] leading-relaxed text-ink-soft">
             {copy.emptyState}
           </Reveal>
@@ -115,8 +117,20 @@ export function BudgetSection() {
                 </Reveal>
               </div>
 
-              {/* the verdict — where the arithmetic meets the brand thesis */}
-              {!goalReached && (
+              {!goalReached && hasEnteredRevenue && (
+                <Reveal delayMs={460} className="mt-8 rounded-2xl border border-line bg-surface p-7 sm:p-9">
+                  <p className="text-[12px] font-semibold text-ink-faint">현재 평균 결제금액으로 필요한 월 추가 결제</p>
+                  <p className="tnum mt-1.5 text-[28px] font-extrabold text-ink">
+                    {formatNumber(roundUpTarget(result.gap / inputs.aov))}건
+                  </p>
+                  <p className="mt-4 text-[14px] leading-relaxed text-ink-soft">
+                    한 고객이 여러 번 결제할 수 있으므로 결제 건수와 신규 고객 수는 다릅니다.
+                    위 비용은 그리온의 운영 기준을 적용한 참고값입니다.
+                    실제 광고 예산은 결제당 이익과 고객 획득 비용을 확인한 뒤 정합니다.
+                  </p>
+                </Reveal>
+              )}
+              {!goalReached && !hasEnteredRevenue && (
                 <Reveal
                   delayMs={460}
                   className={cn(

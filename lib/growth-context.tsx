@@ -20,35 +20,33 @@ import { computeGrowth, type GrowthInputs, type GrowthResult } from "./growth";
  * asked for the same facts again at the bottom of the page.
  */
 
-/**
- * Starting values are explicitly labelled as an example in the UI until
- * the visitor edits something (`touched`). They exist so the hero reads as
- * a working instrument on arrival rather than an empty form — never as a
- * claim about a real business.
- */
-const EXAMPLE_INPUTS: GrowthInputs = {
-  impressions: 30000,
-  visits: 4500,
-  customers: 1800,
-  aov: 15000,
-  repeatRate: 20,
-  goalRevenue: 40000000,
-  rent: 3000000,
+// Missing values stay unknown throughout the page, including budget inputs.
+const EMPTY_INPUTS: GrowthInputs = {
+  currentRevenue: NaN,
+  operatingDays: NaN,
+  impressions: NaN,
+  visits: NaN,
+  customers: NaN,
+  aov: NaN,
+  repeatRate: NaN,
+  goalRevenue: NaN,
+  rent: NaN,
 };
 
 type GrowthContextValue = {
   inputs: GrowthInputs;
   setInput: (key: keyof GrowthInputs, value: number) => void;
+  updateInputs: (values: Partial<GrowthInputs>) => void;
   reset: () => void;
   result: GrowthResult;
-  /** False until the visitor changes any value — drives the "예시 값" badge. */
+  /** True only after the visitor enters their own values. */
   touched: boolean;
 };
 
 const GrowthContext = createContext<GrowthContextValue | null>(null);
 
 export function GrowthProvider({ children }: { children: ReactNode }) {
-  const [inputs, setInputs] = useState<GrowthInputs>(EXAMPLE_INPUTS);
+  const [inputs, setInputs] = useState<GrowthInputs>(EMPTY_INPUTS);
   const [touched, setTouched] = useState(false);
 
   const setInput = useCallback((key: keyof GrowthInputs, value: number) => {
@@ -57,15 +55,20 @@ export function GrowthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const reset = useCallback(() => {
-    setInputs(EXAMPLE_INPUTS);
+    setInputs(EMPTY_INPUTS);
     setTouched(false);
+  }, []);
+
+  const updateInputs = useCallback((values: Partial<GrowthInputs>) => {
+    setTouched(true);
+    setInputs((prev) => ({ ...prev, ...values }));
   }, []);
 
   const result = useMemo(() => computeGrowth(inputs), [inputs]);
 
   const value = useMemo(
-    () => ({ inputs, setInput, reset, result, touched }),
-    [inputs, setInput, reset, result, touched]
+    () => ({ inputs, setInput, updateInputs, reset, result, touched }),
+    [inputs, setInput, updateInputs, reset, result, touched]
   );
 
   return <GrowthContext.Provider value={value}>{children}</GrowthContext.Provider>;

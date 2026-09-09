@@ -1,7 +1,8 @@
 "use client";
 
 import { useGrowth } from "@/lib/growth-context";
-import { formatLeverValue, formatWon } from "@/lib/growth";
+import { formatLeverValue } from "@/lib/growth";
+import { formatPlanMoney as formatWon, roundUpTarget } from "@/lib/growth-planner";
 import { levers as copy } from "@/content/site";
 import { cn } from "@/lib/utils";
 import { Reveal } from "./Reveal";
@@ -45,6 +46,14 @@ export function LeverSection() {
           <Reveal delayMs={120} className="mt-8 max-w-xl text-[16px] leading-relaxed text-white/60">
             입력하신 숫자 기준으로는 이미 목표({formatWon(goalRevenue)})를 넘고 있습니다.
             목표를 더 높여서 다음 성장 지점을 확인해보세요.
+          </Reveal>
+        ) : currentRevenue <= 0 || levers.length === 0 ? (
+          <Reveal delayMs={120} className="mt-8 max-w-xl text-[16px] leading-relaxed text-white/70">
+            현재 {formatWon(currentRevenue)}에서 목표까지 {formatWon(Math.max(0, goalRevenue - currentRevenue))}이
+            더 필요합니다. 계산기에 평균 결제금액과 영업일 수를 입력하면 하루에 필요한 결제 건수를 확인할 수 있습니다.
+            <a href="#growth-calculator" className="focus-ring mt-5 inline-block rounded text-accent-line underline underline-offset-4">
+              하루 목표 계산하기
+            </a>
           </Reveal>
         ) : (
           <>
@@ -90,7 +99,12 @@ export function LeverSection() {
                   ) : (
                     <>
                       <p className="tnum mt-1 text-[30px] font-extrabold leading-tight text-accent-line sm:text-[34px]">
-                        {formatLeverValue(lever.required ?? 0, lever.unit)}
+                        {lever.unit === "원"
+                          ? formatWon(roundUpTarget(lever.required ?? 0))
+                          : formatLeverValue(
+                              lever.unit === "건" ? roundUpTarget(lever.required ?? 0) : lever.required ?? 0,
+                              lever.unit
+                            )}
                       </p>
                       {lever.strained && lever.plainRestatement && (
                         <p className="mt-2 text-[12px] leading-relaxed text-white/55">

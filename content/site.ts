@@ -24,11 +24,11 @@ export const hero = {
   ],
   primaryCta: "내 사업 성장 진단하기",
   primaryCtaHref: "#diagnosis",
-  secondaryCta: "계산 결과 자세히 보기",
-  secondaryCtaHref: "#levers",
+  secondaryCta: "내 숫자로 계산해보기",
+  secondaryCtaHref: "#growth-calculator",
   trustMicro: "광고가 필요하지 않다고 판단되면 광고를 제안하지 않습니다.",
   tags: ["진단", "전략설계", "마케팅 실행", "성장관리"],
-  calcHint: "옆 계산기에 지금 사업의 숫자를 넣어보세요. 아무것도 저장되지 않습니다.",
+  calcHint: "현재 매출과 목표부터 입력해 보세요. 결과를 본 뒤 다음 계산을 선택할 수 있습니다.",
 };
 
 export const problem = {
@@ -112,8 +112,7 @@ export const budget = {
   lead: "목표를 세우는 것과 그 목표를 감당하는 것은 다릅니다. 그리온이 실제로 쓰는 기준으로 지금 목표가 현실적인지 먼저 확인합니다.",
   rentLabel: "월세",
   rentHint: "월세를 넣으면 마케팅에 쓸 수 있는 여력이 계산됩니다.",
-  emptyState:
-    "위 계산기에 방문 수 · 객단가 · 목표 월매출을 넣으면, 그 목표를 감당할 수 있는 구조인지 여기에서 확인됩니다.",
+  emptyState: "계산기에 현재·목표매출과 평균 결제금액을 입력한 뒤, 월세를 알려주세요. 월세가 없다면 0을 입력할 수 있습니다.",
   ceilingLabel: "고정비 상한",
   budgetLabel: "가용 마케팅 비용",
   cacLabel: "적정 고객 획득 비용",
