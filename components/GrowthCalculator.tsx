@@ -54,6 +54,9 @@ function PlannerField({
 export function GrowthCalculator() {
   const { inputs, updateInputs, result } = useGrowth();
   const [step, setStep] = useState<Step>(1);
+  // Clearing the shared goal must leave an editable screen, without scrolling
+  // away from the budget input that the visitor is currently using.
+  const visibleStep = inputs.goalRevenue > 0 ? step : 1;
   const [mode, setMode] = useState<Mode>("volume");
   const [values, setValues] = useState<Values>({
     current: "", goal: "", ticket: "", days: "", extra: "", newTicket: "",
@@ -139,10 +142,10 @@ export function GrowthCalculator() {
             <span className={cls("wordmark")}>grion</span>
             <span className={cls("brand-label")}>내 사업 성장 계산기</span>
           </div>
-          <span className={cls("counter")} aria-live="polite"><strong>0{step}</strong> / 03</span>
+          <span className={cls("counter")} aria-live="polite"><strong>0{visibleStep}</strong> / 03</span>
         </header>
         <div className={cls("main")}>
-          {step === 1 && (
+          {visibleStep === 1 && (
             <div>
               <p className={cls("eyebrow")}>내 숫자로 시작하는 성장 계획</p>
               <h2 ref={headingRef} tabIndex={-1}>목표 매출까지,<br />얼마나 더 팔아야 할까요?</h2>
@@ -160,7 +163,7 @@ export function GrowthCalculator() {
               </details>
             </div>
           )}
-          {step === 2 && (
+          {visibleStep === 2 && (
             <div>
               <button className={cls("secondary") + " " + cls("back")} type="button" onClick={() => back(1)}><span aria-hidden="true">←</span> 매출 수정</button>
               <p className={cls("eyebrow")}>내 목표가 숫자로 보이기 시작했어요</p>
@@ -198,7 +201,7 @@ export function GrowthCalculator() {
               )}
             </div>
           )}
-          {step === 3 && plan && (
+          {visibleStep === 3 && plan && (
             <div>
               <button className={cls("secondary") + " " + cls("back")} type="button" onClick={() => back(2)}><span aria-hidden="true">←</span> 결제금액·영업일 수정</button>
               <p className={cls("eyebrow")}>큰 목표를 하루의 변화로</p>
