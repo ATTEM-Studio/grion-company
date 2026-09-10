@@ -1,4 +1,4 @@
-/** Values entered in 만원 may have two decimal places; empty is not zero. */
+/** Empty is not zero. Currency and count inputs use integer validation. */
 export function parsePlannerValue(raw: string, integer = false): number | null {
   const text = raw.trim();
   if (!/^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d{1,2})?$/.test(text)) return null;

@@ -24,6 +24,9 @@ function PlannerField({
   id: string; label: string; unit: string; value: string;
   onChange: (value: string) => void; hint?: string; error?: string; integer?: boolean;
 }) {
+  const amount = unit === "원" ? parsePlannerValue(value, true) : null;
+  const hasHint = Boolean(hint || unit === "원");
+  const displayHint = amount !== null ? `입력한 금액: ${formatPlanMoney(amount)}` : hint;
   return (
     <div>
       <label htmlFor={id}>{label}</label>
@@ -32,7 +35,7 @@ function PlannerField({
           id={id} type="text" inputMode={integer ? "numeric" : "decimal"}
           autoComplete="off" maxLength={15} value={value}
           aria-invalid={error ? true : undefined}
-          aria-describedby={[hint && id + "-hint", error && id + "-error"].filter(Boolean).join(" ") || undefined}
+          aria-describedby={[hasHint && id + "-hint", error && id + "-error"].filter(Boolean).join(" ") || undefined}
           onChange={(event) => onChange(event.target.value)}
           onFocus={() => { if (value.includes(",")) onChange(value.replaceAll(",", "")); }}
           onBlur={() => {
@@ -42,7 +45,7 @@ function PlannerField({
         />
         <span className={cls("unit")}>{unit}</span>
       </div>
-      {hint && <p className={cls("hint")} id={id + "-hint"}>{hint}</p>}
+      {hasHint && <p className={cls("hint")} id={id + "-hint"} aria-live={unit === "원" ? "polite" : undefined}>{displayHint}</p>}
       {error && <p className={cls("error")} id={id + "-error"} role="alert">{error}</p>}
     </div>
   );
@@ -84,11 +87,11 @@ export function GrowthCalculator() {
   };
   const submitRevenue = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const current = parsePlannerValue(values.current);
-    const goal = parsePlannerValue(values.goal);
-    if (current === null) return reject("current", "현재 월매출을 만원 단위로 입력해 주세요. 매출이 없다면 0을 입력할 수 있어요.");
-    if (goal === null || goal <= 0) return reject("goal", "목표 월매출은 0보다 큰 금액으로 입력해 주세요.");
-    updateInputs({ currentRevenue: Math.round(current * 10000), goalRevenue: Math.round(goal * 10000) });
+    const current = parsePlannerValue(values.current, true);
+    const goal = parsePlannerValue(values.goal, true);
+    if (current === null) return reject("current", "현재 월매출을 원 단위 정수로 입력해 주세요. 매출이 없다면 0을 입력할 수 있어요.");
+    if (goal === null || goal <= 0) return reject("goal", "목표 월매출은 0원보다 큰 정수로 입력해 주세요.");
+    updateInputs({ currentRevenue: current, goalRevenue: goal });
     setErrors({});
     setStep(2);
   };
@@ -136,11 +139,11 @@ export function GrowthCalculator() {
             <div>
               <p className={cls("eyebrow")}>내 숫자로 시작하는 성장 계획</p>
               <h2 ref={headingRef} tabIndex={-1}>목표 매출까지,<br />얼마나 더 팔아야 할까요?</h2>
-              <p className={cls("description")}>현재 매출과 목표, 두 가지만 알려주세요.</p>
+              <p className={cls("description")}>현재 매출과 목표를 원 단위로 입력해 주세요.</p>
               <form onSubmit={submitRevenue} noValidate>
                 <div className={cls("fields")}>
-                  {field("current", "현재 월매출", "만원", "지난 한 달의 매출")}
-                  {field("goal", "목표 월매출", "만원", "한 달에 만들고 싶은 매출")}
+                  {field("current", "현재 월매출", "원", "지난 한 달의 매출", true)}
+                  {field("goal", "목표 월매출", "원", "한 달에 만들고 싶은 매출", true)}
                 </div>
                 <button className={cls("primary")} type="submit">내 매출로 계산하기 <span aria-hidden="true">→</span></button>
               </form>
