@@ -2,6 +2,7 @@
 export async function verifyRevenueUnits(page) {
   const calculator = page.getByRole("region", { name: "그리온 목표 매출 계산기" });
   const expectText = async (text) => {
+    await calculator.getByText(text, { exact: true }).first().waitFor({ state: "visible" });
     if (!(await calculator.innerText()).split("\n").includes(text)) {
       throw new Error(`Revenue unit regression: expected ${text}`);
     }
@@ -12,8 +13,13 @@ export async function verifyRevenueUnits(page) {
     { current: "0", goal: "1000000", currentLabel: "0원", goalLabel: "100만 원", gap: "100만 원", restored: "0" },
   ];
   for (const fixture of fixtures) {
-    await calculator.getByRole("textbox", { name: "현재 월매출", exact: true }).fill(fixture.current);
-    await calculator.getByRole("textbox", { name: "목표 월매출", exact: true }).fill(fixture.goal);
+    const currentInput = calculator.getByRole("textbox", { name: "현재 월매출", exact: true });
+    const goalInput = calculator.getByRole("textbox", { name: "목표 월매출", exact: true });
+    // Finish the focus-triggered comma formatting before replacing a value.
+    await currentInput.click();
+    await currentInput.fill(fixture.current);
+    await goalInput.click();
+    await goalInput.fill(fixture.goal);
     await expectText(`입력한 금액: ${fixture.currentLabel}`);
     await expectText(`입력한 금액: ${fixture.goalLabel}`);
     await calculator.getByRole("button", { name: "내 매출로 계산하기", exact: true }).click();
