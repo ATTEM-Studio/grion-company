@@ -32,6 +32,6 @@ export async function verifyGrowthFlow(page) {
   await page.getByRole("button", { name: "객단가를 높여보면", exact: true }).waitFor({ state: "visible" });
   if (Number(await pipe.getAttribute("stroke-width")) !== initialWidth) throw new Error("Keyboard reset should restore the original flow.");
   await panel.getByRole("link", { name: "이 상황으로 상담 이어가기", exact: true }).click();
-  const concern = page.getByRole("textbox", { name: "현재 가장 큰 고민 *", exact: true });
+  const concern = page.getByRole("textbox", { name: /^현재 가장 큰 고민/ });
   if (!(await concern.evaluate(el => el.value)).includes("한 번 이용하고 끝나요")) throw new Error("Selected concern should carry into the existing consultation form.");
 }
