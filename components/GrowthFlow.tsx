@@ -54,7 +54,7 @@ export function GrowthFlow() {
             </div>
             <div className={styles.diagram}>
               <svg className={styles.pipeline} viewBox="0 0 640 100" preserveAspectRatio="none" aria-hidden="true">
-                <defs><linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+                <defs><linearGradient id={gradientId} gradientUnits="userSpaceOnUse" x1="80" y1="50" x2="560" y2="50">
                   <stop offset="0%" stopColor="#3449f5" /><stop offset="65%" stopColor="#74cfff" /><stop offset="100%" stopColor="#3449f5" />
                 </linearGradient></defs>
                 <path d="M80 50 H560" stroke="#e5eafa" strokeWidth="28" strokeLinecap="round" />
