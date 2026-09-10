@@ -2,7 +2,7 @@
 
 import { useGrowth } from "@/lib/growth-context";
 import { formatNumber, formatWon, GRION_STANDARDS } from "@/lib/growth";
-import { roundUpTarget } from "@/lib/growth-planner";
+import { roundUpTarget, formatPlanMoney } from "@/lib/growth-planner";
 import { budget as copy } from "@/content/site";
 import { cn } from "@/lib/utils";
 import { NumberField } from "./NumberField";
@@ -23,7 +23,7 @@ import { Reveal } from "./Reveal";
  */
 export function BudgetSection() {
   const { inputs, setInput, result } = useGrowth();
-  const { standards, canCompute, goalReached } = result;
+  const { standards, canCompute, goalReached, budget } = result;
   const hasEnteredRevenue = Number.isFinite(inputs.currentRevenue);
 
   return (
@@ -50,23 +50,46 @@ export function BudgetSection() {
           </Reveal>
         </div>
 
-        {/* rent input — the one number every owner knows cold */}
-        <Reveal delayMs={180} className="mt-12 flex flex-wrap items-center gap-3 rounded-xl border border-line bg-surface px-5 py-4">
-          <span className="text-[13px] font-bold text-ink">{copy.rentLabel}</span>
-          <NumberField
-            value={inputs.rent}
-            onChange={(v) => setInput("rent", v)}
-            ariaLabel="월세 입력"
-            suffix="원"
-            className="w-[190px]"
-          />
-          <span className="text-[12px] text-ink-faint">{copy.rentHint}</span>
-        </Reveal>
+        <div className="mt-10 rounded-2xl border border-line bg-surface p-5 sm:p-7">
+          <p className="text-[16px] font-bold text-ink">월세부터 입력해 보세요.</p>
+          <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">목표 월매출까지 알려주시면 마케팅 비용 여력을 바로 계산해요. 위 계산기를 먼저 채우지 않아도 됩니다.</p>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2">
+            <div>
+              <p className="mb-2 text-[14px] font-bold text-ink">월세</p>
+              <NumberField value={inputs.rent} onChange={(v) => setInput("rent", v)}
+                ariaLabel="월세 입력" suffix="원" max={90_000_000_000} inputClassName="min-h-12 !text-[18px]" />
+              <p className="mt-2 text-[13px] text-ink-soft">{Number.isFinite(inputs.rent) ? `입력한 월세: ${formatPlanMoney(inputs.rent)}` : "월세가 없다면 0을 입력해 주세요."}</p>
+            </div>
+            <div>
+              <p className="mb-2 text-[14px] font-bold text-ink">목표 월매출</p>
+              <NumberField value={inputs.goalRevenue} onChange={(v) => setInput("goalRevenue", v)}
+                ariaLabel="예산 계산 목표 월매출" suffix="원" max={90_000_000_000} inputClassName="min-h-12 !text-[18px]" />
+              <p className="mt-2 text-[13px] text-ink-soft">{Number.isFinite(inputs.goalRevenue) ? inputs.goalRevenue > 0 ? `입력한 목표: ${formatPlanMoney(inputs.goalRevenue)}` : "목표 월매출은 0원보다 크게 입력해 주세요." : "위에서 입력한 목표가 있다면 자동으로 연결돼요."}</p>
+            </div>
+          </div>
+        </div>
 
         {!canCompute || !standards ? (
-          <Reveal delayMs={220} className="mt-8 max-w-xl text-[15px] leading-relaxed text-ink-soft">
-            {copy.emptyState}
-          </Reveal>
+          <div className="mt-6" role="status" aria-live="polite" aria-atomic="true">
+            {!budget ? (
+              <p className="text-[15px] leading-relaxed text-ink-soft">월세를 입력하면 그리온 기준으로 참고할 매출 규모가 표시됩니다.</p>
+            ) : budget.marketingBudget === null ? (
+              <div className="rounded-2xl border border-accent-line bg-accent-soft p-6 sm:p-7">
+                <p className="text-[14px] font-semibold text-ink-soft">월세가 매출의 {Math.round(GRION_STANDARDS.fixedCostRatio * 100)}%가 되는 월매출</p>
+                <p className="tnum mt-3 text-[30px] font-extrabold text-accent" data-testid="rent-reference">{formatPlanMoney(budget.rentOnlyRevenue)}</p>
+                <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">월세만 반영한 참고값이며, 손익분기 매출은 아닙니다. 마케팅 비용은 포함되지 않았어요.</p>
+                <p className="mt-4 text-[15px] font-bold text-ink">목표 월매출을 입력하면 남는 비용 여력까지 확인할 수 있어요.</p>
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <div><p className="text-[14px] text-ink-soft">월세 + 마케팅비 참고 상한</p><p className="tnum mt-3 text-[28px] font-extrabold text-ink">{formatPlanMoney(budget.fixedCostCeiling!)}</p><p className="mt-2 text-[13px] text-ink-soft">목표 월매출의 {Math.round(GRION_STANDARDS.fixedCostRatio * 100)}% · 그리온 기준</p></div>
+                  <div><p className="text-[14px] text-ink-soft">월세를 뺀 마케팅 비용 여력</p><p className={cn("tnum mt-3 text-[28px] font-extrabold", budget.marketingBudget > 0 ? "text-accent" : "text-signal-warn")} data-testid="budget-available">{formatPlanMoney(Math.max(0, budget.marketingBudget))}</p><p className="mt-2 text-[13px] text-ink-soft">참고 상한 − 입력한 월세</p></div>
+                </div>
+                <p className="mt-6 border-t border-line pt-5 text-[15px] leading-relaxed text-ink-soft">{budget.marketingBudget < 0 ? `월세가 그리온 참고 상한보다 ${formatPlanMoney(-budget.marketingBudget)} 높습니다. 현재 목표와 비용 구성을 함께 점검해 보세요.` : budget.marketingBudget === 0 ? "월세가 참고 상한과 같아 이 기준에서는 마케팅 비용 여력이 남지 않습니다." : "목표 매출을 달성했을 때의 참고 여력입니다. 실제 집행액은 현재 매출과 이익, 다른 비용을 함께 보고 정해 주세요."}</p>
+              </div>
+            )}
+          </div>
         ) : (
           standards && (
             <>

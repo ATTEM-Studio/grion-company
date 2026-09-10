@@ -154,6 +154,12 @@ export type GrowthResult = {
   hasFunnelData: boolean;
   /** 그리온 기준으로 본 예산·CAC·재방문 점검. 계산 불가면 null. */
   standards: Standards | null;
+  /** Budget feedback needs rent, with goal revenue optional; no customer data required. */
+  budget: {
+    rentOnlyRevenue: number;
+    fixedCostCeiling: number | null;
+    marketingBudget: number | null;
+  } | null;
 };
 
 /** 객단가에 해당하는 그리온 재방문율 기준(%)을 찾습니다. */
@@ -328,6 +334,11 @@ export function computeGrowth(raw: GrowthInputs): GrowthResult {
       ];
 
   const rent = clean(raw.rent);
+  const budget = Number.isFinite(raw.rent) && raw.rent >= 0 ? {
+    rentOnlyRevenue: rent / GRION_STANDARDS.fixedCostRatio,
+    fixedCostCeiling: goalRevenue > 0 ? goalRevenue * GRION_STANDARDS.fixedCostRatio : null,
+    marketingBudget: goalRevenue > 0 ? goalRevenue * GRION_STANDARDS.fixedCostRatio - rent : null,
+  } : null;
 
   let standards: Standards | null = null;
   if (canCompute && aov > 0 && Number.isFinite(raw.rent) && raw.rent >= 0) {
@@ -368,6 +379,7 @@ export function computeGrowth(raw: GrowthInputs): GrowthResult {
     canCompute,
     hasFunnelData,
     standards,
+    budget,
   };
 }
 

@@ -69,6 +69,13 @@ export function GrowthCalculator() {
     setErrors((old) => ({ ...old, [key]: undefined }));
   };
 
+  // Keep the editable draft aligned only when another section changes the shared goal.
+  const [sharedGoal, setSharedGoal] = useState(inputs.goalRevenue);
+  if (!Object.is(sharedGoal, inputs.goalRevenue)) {
+    setSharedGoal(inputs.goalRevenue);
+    setValues(old => ({ ...old, goal: Number.isFinite(inputs.goalRevenue) ? String(inputs.goalRevenue) : "" }));
+  }
+
   useEffect(() => {
     if (!didMount.current) { didMount.current = true; return; }
     headingRef.current?.focus({ preventScroll: true });

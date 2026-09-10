@@ -24,6 +24,24 @@ const empty = {
   repeatRate: NaN, goalRevenue: NaN, rent: NaN, currentRevenue: NaN,
 };
 
+test("rent alone provides a clearly limited reference before revenue inputs", () => {
+  const result = computeGrowth({ ...empty, rent: 15_000_000 });
+  assert.ok(result.budget, "rent entry must produce budget feedback without the hero calculator");
+  assert.equal(result.budget.rentOnlyRevenue, 150_000_000);
+  assert.equal(result.budget.marketingBudget, null);
+  assert.equal(result.canCompute, false);
+});
+
+test("budget needs only goal and rent, preserving blank, zero and overrun", () => {
+  assert.equal(computeGrowth({ ...empty, goalRevenue: 50_000_000 }).budget, null);
+  const calculate = (rent) => computeGrowth({ ...empty, goalRevenue: 50_000_000, rent }).budget;
+  assert.equal(calculate(2_000_000)?.marketingBudget, 3_000_000);
+  assert.equal(calculate(0)?.marketingBudget, 5_000_000);
+  assert.equal(calculate(15_000_000)?.marketingBudget, -10_000_000);
+  assert.equal(calculate(-1), null);
+  assert.equal(computeGrowth({ ...empty, goalRevenue: 0, rent: 2_000_000 }).budget?.marketingBudget, null);
+});
+
 test("current and goal revenues produce a gap without inventing transaction counts", () => {
   const result = computeGrowth({ ...empty, currentRevenue: 27_000_000, goalRevenue: 40_000_000 });
   assert.equal(result.canCompute, true);
