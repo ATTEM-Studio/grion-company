@@ -28,6 +28,9 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
+  // A section can have many small parts. Cap inherited delays so content
+  // arrives as one calm group instead of a long scrolling cascade.
+  const effectiveDelay = Math.min(delayMs, 120);
   // Dynamic tag with a shared HTMLElement ref — cast once here so call
   // sites stay strongly typed on props while JSX overload resolution
   // doesn't fight the tag union.
@@ -48,7 +51,7 @@ export function Reveal({
           }
         }
       },
-      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.01, rootMargin: "0px 0px -2% 0px" }
     );
 
     observer.observe(el);
@@ -59,7 +62,7 @@ export function Reveal({
     <Component
       ref={ref as RefObject<HTMLDivElement>}
       className={cn("reveal", visible && "is-visible", className)}
-      style={delayMs ? { transitionDelay: `${delayMs}ms` } : undefined}
+      style={effectiveDelay ? { transitionDelay: `${effectiveDelay}ms` } : undefined}
     >
       {children}
     </Component>
