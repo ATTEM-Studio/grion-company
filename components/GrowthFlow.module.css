@@ -33,7 +33,7 @@
 .diagram { position:relative; height:134px; margin:6px 0 20px; }
 .pipeline { position:absolute; top:0; left:0; width:100%; height:100px; overflow:visible; }
 .pipeCore { transition:stroke-width .45s cubic-bezier(.2,.8,.2,1); filter:drop-shadow(0 4px 8px #4966f330); }
-.signal { animation:flowSignal 3s linear infinite; transition:stroke-width .4s; }
+.signal { animation:flowSignal 2.2s linear infinite; opacity:.95; filter:drop-shadow(0 0 2px #ffffffb8); transition:stroke-width .4s; }
 .root[data-boosted="true"] .signal { animation-duration:.9s; }
 .nodes { position:relative; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); list-style:none; margin:0; padding:0; }
 .node { display:flex; align-items:center; flex-direction:column; gap:12px; padding-top:23px; font-size:14px; font-weight:650; color:#64718a; }
