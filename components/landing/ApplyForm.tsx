@@ -6,10 +6,13 @@ import { cn } from "@/lib/utils";
 import { Rich } from "./Rich";
 
 type Field = "name" | "company" | "placeUrl" | "contact";
-const fieldOrder: Field[] = ["name", "company", "placeUrl", "contact"];
+const fieldOrder: Field[] = ["name", "company", "contact", "placeUrl"];
+const optionalFields: Field[] = ["placeUrl"];
+const COMPETITOR_SLOTS = 3;
 
 function validate(key: Field, raw: string): string | undefined {
   const v = raw.trim();
+  if (!v && optionalFields.includes(key)) return undefined;
   if (!v) return "필수 입력 항목입니다.";
   if (key === "placeUrl" && !/naver\./i.test(v)) {
     return "네이버 지도에서 복사한 링크(naver.me 또는 map.naver.com)를 붙여 주세요.";
@@ -34,6 +37,7 @@ function sourceLabel(): string {
 export function ApplyForm() {
   const [values, setValues] = useState<Record<Field, string>>({ name: "", company: "", placeUrl: "", contact: "" });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
+  const [competitors, setCompetitors] = useState<string[]>(Array(COMPETITOR_SLOTS).fill(""));
   const [concerns, setConcerns] = useState<string[]>([]);
   const [memo, setMemo] = useState("");
   const [consent, setConsent] = useState(false);
@@ -71,6 +75,7 @@ export function ApplyForm() {
           company: values.company.trim(),
           placeUrl: values.placeUrl.trim(),
           contact: values.contact.trim(),
+          competitors: competitors.map((c) => c.trim()).filter(Boolean).join(" / "),
           concern,
           source: sourceLabel(),
           website,
@@ -130,7 +135,12 @@ export function ApplyForm() {
                 return (
                   <div key={key}>
                     <label htmlFor={`apply-${key}`} className="text-sm font-semibold text-ink">
-                      {field.label} <span className="text-accent">*</span>
+                      {field.label}{" "}
+                      {optionalFields.includes(key) ? (
+                        <span className="font-normal text-ink-faint">(선택)</span>
+                      ) : (
+                        <span className="text-accent">*</span>
+                      )}
                     </label>
                     <input
                       id={`apply-${key}`}
@@ -163,6 +173,25 @@ export function ApplyForm() {
                   </div>
                 );
               })}
+
+              <fieldset>
+                <legend className="text-sm font-semibold text-ink">{f.competitors.label}</legend>
+                <p className="mt-1.5 text-[12px] leading-relaxed text-ink-faint">{f.competitors.help}</p>
+                <div className="mt-2.5 space-y-2">
+                  {competitors.map((value, i) => (
+                    <input
+                      key={i}
+                      aria-label={`경쟁 매장 ${i + 1}`}
+                      value={value}
+                      onChange={(e) =>
+                        setCompetitors((prev) => prev.map((c, j) => (j === i ? e.target.value : c)))
+                      }
+                      placeholder={f.competitors.placeholder}
+                      className="focus-ring w-full rounded-lg border border-line bg-bg px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint"
+                    />
+                  ))}
+                </div>
+              </fieldset>
 
               <fieldset>
                 <legend className="text-sm font-semibold text-ink">{f.concernLabel}</legend>
