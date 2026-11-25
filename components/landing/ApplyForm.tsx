@@ -97,7 +97,8 @@ export function ApplyForm() {
           <p className="mt-3 text-[15px] text-white/75">
             <Rich text={f.sub} tone="dark" />
           </p>
-          <p className="mt-3 inline-flex rounded-full bg-signal-warn-soft px-3.5 py-1.5 text-[13px] font-extrabold text-signal-warn">
+          <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-signal-warn-soft px-3.5 py-1.5 text-[13px] font-extrabold text-signal-warn">
+            <span className="scarcity-dot" aria-hidden="true" />
             {f.scarcity}
           </p>
         </div>

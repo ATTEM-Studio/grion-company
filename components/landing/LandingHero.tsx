@@ -41,7 +41,7 @@ export function LandingHero() {
           </ul>
 
           {/* 가격 강조 카드 */}
-          <div className="mt-6 rounded-2xl border-2 border-accent bg-surface p-5 shadow-[0_16px_40px_-24px_rgba(43,63,234,0.6)]">
+          <div className="mt-6 rounded-2xl border-2 border-accent bg-surface p-4 sm:p-5 shadow-[0_16px_40px_-24px_rgba(43,63,234,0.6)]">
             <div className="flex items-center justify-between">
               <span className="text-[16px] font-extrabold text-ink">{h.priceLabel}</span>
               <span className="rounded-full bg-accent px-3 py-1 text-[12px] font-extrabold text-white">무료</span>
@@ -57,10 +57,11 @@ export function LandingHero() {
                   key={c}
                   className={
                     i === 0
-                      ? "rounded-full bg-signal-warn-soft px-2.5 py-1 text-[12px] font-extrabold text-signal-warn sm:px-3 sm:text-[13px]"
-                      : "rounded-full bg-accent-soft px-2.5 py-1 text-[12px] font-bold text-accent-strong sm:px-3 sm:text-[13px]"
+                      ? "inline-flex items-center gap-1.5 rounded-full bg-signal-warn-soft px-2 py-1 text-[12px] font-extrabold text-signal-warn sm:px-3 sm:text-[13px]"
+                      : "rounded-full bg-accent-soft px-2 py-1 text-[12px] font-bold text-accent-strong sm:px-3 sm:text-[13px]"
                   }
                 >
+                  {i === 0 && <span className="scarcity-dot" aria-hidden="true" />}
                   {c}
                 </li>
               ))}
