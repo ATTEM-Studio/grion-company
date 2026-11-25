@@ -9,6 +9,7 @@ import {
   trust,
 } from "@/content/landing";
 import { Rich } from "./Rich";
+import { ClientChatMarquee } from "./ClientChatMarquee";
 
 const wrap = "relative mx-auto max-w-[880px] px-5 md:px-8";
 const h2 = "text-[24px] font-extrabold leading-[1.35] tracking-tight text-ink sm:text-[30px]";
@@ -134,6 +135,7 @@ export function AfterDiagnosisSection() {
           ))}
         </dl>
       </div>
+      <ClientChatMarquee />
     </section>
   );
 }

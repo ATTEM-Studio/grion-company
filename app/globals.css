@@ -335,3 +335,21 @@ textarea,
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* 랜딩: 클라이언트 카톡 흐르는 띠 */
+@keyframes chat-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.chat-marquee-track {
+  animation: chat-marquee 70s linear infinite;
+}
+.chat-marquee:hover .chat-marquee-track,
+.chat-marquee:focus-within .chat-marquee-track,
+.chat-marquee:active .chat-marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .chat-marquee { overflow-x: auto; }
+  .chat-marquee-track { animation: none; }
+}

@@ -129,6 +129,27 @@ export const afterDiagnosis = {
   ],
 };
 
+// 실제 마케팅관리 클라이언트와 나눈 카카오톡 (사용자 제공, 2026-11-26).
+// 매장명과 손님 얼굴은 가렸습니다. 매장명 공개는 해당 클라이언트 동의 후에만.
+export const clientChats = {
+  title: "실제 클라이언트에게 받은 메시지",
+  note: "마케팅관리 고객과 나눈 카카오톡입니다. 매장명과 손님 얼굴은 가렸습니다. 결과는 매장마다 다르며, 같은 결과를 보장하지 않습니다.",
+  items: [
+    { src: "/clients/01-sales-dec.webp", w: 810, h: 900, label: "매출 공유" },
+    { src: "/clients/02-sales-jul.webp", w: 972, h: 900, label: "월 매출 공유" },
+    { src: "/clients/03-openrun.webp", w: 917, h: 900, label: "오픈런 만석" },
+    { src: "/clients/04-turned-away.webp", w: 1531, h: 900, label: "손님을 다 못 받은 주말" },
+    { src: "/clients/05-blog-visit.webp", w: 739, h: 900, label: "블로그 보고 찾아온 손님" },
+    { src: "/clients/06-thanks.webp", w: 675, h: 900, label: "감사 인사" },
+    { src: "/clients/07-soldout.webp", w: 748, h: 900, label: "재료 소진" },
+    { src: "/clients/08-reserved.webp", w: 1080, h: 900, label: "예약 만석" },
+    { src: "/clients/09-ad-report.webp", w: 771, h: 900, label: "광고 성과 보고" },
+    { src: "/clients/10-waiting.webp", w: 944, h: 900, label: "웨이팅" },
+    { src: "/clients/11-rank1.webp", w: 444, h: 900, label: "검색 1위 확인" },
+    { src: "/clients/12-rank1-reply.webp", w: 2077, h: 900, label: "고객 답장" },
+  ],
+};
+
 export const landingFaq = {
   title: "자주 묻는 질문",
   items: [
