@@ -8,6 +8,7 @@ import {
   steps,
   trust,
 } from "@/content/landing";
+import { Rich } from "./Rich";
 
 const wrap = "relative mx-auto max-w-[880px] px-5 md:px-8";
 const h2 = "text-[24px] font-extrabold leading-[1.35] tracking-tight text-ink sm:text-[30px]";
@@ -47,13 +48,16 @@ export function ReportSection() {
                 <p className="text-lg font-extrabold text-ink">{r.title}</p>
               </div>
               <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{r.body}</p>
-              <p className="mt-3 rounded-lg bg-accent-soft px-3.5 py-2.5 text-[14px] font-semibold text-accent-strong">
-                → {r.answer}
+              <p className="mt-3 rounded-lg border-l-4 border-accent bg-accent-soft px-4 py-3 text-[15px] font-semibold text-ink">
+                <span className="mr-1 font-black text-accent" aria-hidden="true">→</span>
+                <Rich text={r.answer} />
               </p>
             </li>
           ))}
         </ol>
-        <p className="mt-5 border-l-4 border-accent pl-4 text-[15px] font-bold text-ink">{reportSection.basis}</p>
+        <p className="mt-6 rounded-2xl bg-navy px-6 py-5 text-[18px] font-bold leading-relaxed text-white/85 md:text-[20px]">
+          <Rich text={reportSection.basis} tone="dark" />
+        </p>
       </div>
     </section>
   );
@@ -66,12 +70,17 @@ export function StepsSection() {
         <h2 className={h2}>{steps.title}</h2>
         <ol className="mt-8 grid grid-cols-1 gap-3 md:grid-cols-3">
           {steps.items.map((s) => (
-            <li key={s.no} className="rounded-2xl border border-line bg-surface p-5">
+            <li
+              key={s.no}
+              className={s.no === "3" ? "rounded-2xl border-2 border-accent bg-surface p-5" : "rounded-2xl border border-line bg-surface p-5"}
+            >
               <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-sm font-bold text-white">
                 {s.no}
               </span>
               <p className="mt-3 text-[17px] font-extrabold text-ink">{s.title}</p>
-              <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">{s.body}</p>
+              <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">
+                <Rich text={s.body} />
+              </p>
             </li>
           ))}
         </ol>
@@ -97,7 +106,9 @@ export function TrustSection() {
           {trust.promises.map((p) => (
             <li key={p} className="flex gap-2.5 text-[15px] font-semibold text-ink">
               <span className="text-accent" aria-hidden="true">✓</span>
-              {p}
+              <span>
+                <Rich text={p} />
+              </span>
             </li>
           ))}
         </ul>
@@ -111,7 +122,9 @@ export function AfterDiagnosisSection() {
     <section className="border-b border-line bg-bg py-14 md:py-20">
       <div className={wrap}>
         <h2 className={h2}>{afterDiagnosis.title}</h2>
-        <p className="mt-3 text-[15px] leading-relaxed text-ink-soft md:text-base">{afterDiagnosis.lead}</p>
+        <p className="mt-3 text-[15px] leading-relaxed text-ink-soft md:text-base">
+          <Rich text={afterDiagnosis.lead} />
+        </p>
         <dl className="mt-6 overflow-hidden rounded-2xl border border-line bg-surface">
           {afterDiagnosis.rows.map((r) => (
             <div key={r.k} className="grid grid-cols-[120px_1fr] gap-3 border-b border-line px-5 py-3.5 last:border-b-0">

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { landingFaq } from "@/content/landing";
 import { cn } from "@/lib/utils";
+import { Rich } from "./Rich";
 
 export function LandingFaq() {
   const [open, setOpen] = useState<number | null>(0);
@@ -41,7 +42,9 @@ export function LandingFaq() {
                   )}
                 >
                   <div className="min-h-0">
-                    <p className="pb-5 text-[15px] leading-relaxed text-ink-soft">{item.a}</p>
+                    <p className="pb-5 text-[15px] leading-relaxed text-ink-soft">
+                      <Rich text={item.a} />
+                    </p>
                   </div>
                 </div>
               </div>

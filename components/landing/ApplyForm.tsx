@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { applyForm as f } from "@/content/landing";
 import { cn } from "@/lib/utils";
+import { Rich } from "./Rich";
 
 type Field = "name" | "company" | "placeUrl" | "contact";
 const fieldOrder: Field[] = ["name", "company", "placeUrl", "contact"];
@@ -88,8 +89,15 @@ export function ApplyForm() {
       <div className="mx-auto max-w-[560px] px-5 md:px-8">
         <div className="text-center text-white">
           <h2 className="text-[26px] font-extrabold tracking-tight sm:text-[30px]">{f.title}</h2>
-          <p className="mt-2 text-[15px] text-white/75">{f.sub}</p>
-          <p className="mt-3 inline-flex rounded-full bg-white/10 px-3 py-1 text-[12px] font-semibold text-white/85">
+          <div className="mt-3 flex items-baseline justify-center gap-3">
+            <s className="text-lg font-semibold text-white/45 decoration-2">{f.priceFrom}</s>
+            <span aria-hidden="true" className="text-lg text-white/45">→</span>
+            <span className="text-[40px] font-black leading-none tracking-tight text-white">{f.priceTo}</span>
+          </div>
+          <p className="mt-3 text-[15px] text-white/75">
+            <Rich text={f.sub} tone="dark" />
+          </p>
+          <p className="mt-3 inline-flex rounded-full bg-signal-warn-soft px-3.5 py-1.5 text-[13px] font-extrabold text-signal-warn">
             {f.scarcity}
           </p>
         </div>
@@ -217,7 +225,9 @@ export function ApplyForm() {
               >
                 {state === "sending" ? f.submitting : f.submit}
               </button>
-              <p className="text-center text-[13px] text-ink-faint">{f.reassurance}</p>
+              <p className="text-center text-[14px] text-ink-soft">
+                <Rich text={f.reassurance} />
+              </p>
             </form>
           )}
         </div>

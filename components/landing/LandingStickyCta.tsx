@@ -43,7 +43,9 @@ export function LandingStickyCta() {
         className="focus-ring flex w-full flex-col items-center justify-center rounded-full bg-accent px-6 py-2.5 text-white"
       >
         <span className="text-[15px] font-bold">{landingCta}</span>
-        <span className="text-[11px] text-white/80">39,000원 → 0원 · 30팀 선착순</span>
+        <span className="text-[12px] text-white/85">
+          <s className="text-white/60">39,000원</s> → <strong className="font-extrabold text-white">0원</strong> · 30팀 선착순
+        </span>
       </a>
     </div>
   );

@@ -1,5 +1,6 @@
 import { formHref, landingCta, landingHero as h, reportSection } from "@/content/landing";
 import { ReportPreview } from "./ReportPreview";
+import { Rich } from "./Rich";
 
 export function LandingHero() {
   return (
@@ -12,13 +13,21 @@ export function LandingHero() {
 
           <h1 className="mt-4 text-[30px] font-extrabold leading-[1.25] tracking-tight text-ink sm:text-[42px] md:text-[48px]">
             {h.headline.map((line, i) => (
-              <span key={line} className={i === h.headlineAccentLine ? "block text-accent" : "block"}>
-                {line}
+              <span key={line} className="block">
+                {i === h.headlineAccentLine ? (
+                  <span className="box-decoration-clone text-accent [background:linear-gradient(transparent_70%,var(--accent-soft)_70%)]">
+                    {line}
+                  </span>
+                ) : (
+                  line
+                )}
               </span>
             ))}
           </h1>
 
-          <p className="mt-4 max-w-xl text-[16px] leading-[1.7] text-ink-soft md:text-[17px]">{h.sub}</p>
+          <p className="mt-4 max-w-xl text-[16px] leading-[1.75] text-ink-soft md:text-[17px]">
+            <Rich text={h.sub} />
+          </p>
 
           <ul className="mt-5 space-y-2">
             {h.gets.map((g) => (
@@ -31,11 +40,32 @@ export function LandingHero() {
             ))}
           </ul>
 
-          <div className="mt-6 flex items-baseline gap-2.5">
-            <s className="text-lg font-medium text-ink-faint">{h.priceFrom}</s>
-            <span className="text-[34px] font-extrabold leading-none tracking-tight text-ink">{h.priceTo}</span>
+          {/* 가격 강조 카드 */}
+          <div className="mt-6 rounded-2xl border-2 border-accent bg-surface p-5 shadow-[0_16px_40px_-24px_rgba(43,63,234,0.6)]">
+            <div className="flex items-center justify-between">
+              <span className="text-[14px] font-bold text-ink-soft">{h.priceLabel}</span>
+              <span className="rounded-full bg-accent px-3 py-1 text-[12px] font-extrabold text-white">무료</span>
+            </div>
+            <div className="mt-1.5 flex items-baseline gap-3">
+              <s className="text-xl font-semibold text-ink-faint decoration-2">{h.priceFrom}</s>
+              <span aria-hidden="true" className="text-xl font-bold text-ink-faint">→</span>
+              <span className="text-[48px] font-black leading-none tracking-tight text-accent">{h.priceTo}</span>
+            </div>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {h.chips.map((c, i) => (
+                <li
+                  key={c}
+                  className={
+                    i === 0
+                      ? "rounded-full bg-signal-warn-soft px-3 py-1 text-[13px] font-extrabold text-signal-warn"
+                      : "rounded-full bg-accent-soft px-3 py-1 text-[13px] font-bold text-accent-strong"
+                  }
+                >
+                  {c}
+                </li>
+              ))}
+            </ul>
           </div>
-          <p className="mt-1.5 text-[13px] font-medium text-ink-soft">{h.priceNote}</p>
 
           <a
             href={formHref}
@@ -44,7 +74,9 @@ export function LandingHero() {
             {landingCta}
             <span aria-hidden="true">→</span>
           </a>
-          <p className="mt-3 text-[13px] text-ink-faint">{h.microCopy}</p>
+          <p className="mt-3 text-[14px] text-ink-soft">
+            <Rich text={h.microCopy} />
+          </p>
         </div>
 
         <ReportPreview caption={reportSection.previewCaption} />
