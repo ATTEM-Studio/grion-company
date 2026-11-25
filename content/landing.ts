@@ -71,6 +71,7 @@ export const trust = {
   company: "그리온컴퍼니 (GRION COMPANY)",
   positioning: "광고를 팔기 전에, 손님이 어디서 빠져나가는지부터 찾는 마케팅 회사입니다.",
   items: [
+    { big: "100+", label: "마케팅을 관리한 매장" },
     { big: "5년", label: "마케팅 실무 경험" },
     { big: "2년", label: "정부지원사업 공급업체 운영", sub: "브랜딩 · 마케팅 · 컨설팅" },
   ],

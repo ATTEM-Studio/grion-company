@@ -104,9 +104,16 @@ export function TrustSection() {
             <p className="text-[15px] font-extrabold tracking-wide">{trust.company}</p>
           </div>
           <p className="mt-3 text-[17px] font-bold leading-relaxed text-white/90 md:text-[19px]">{trust.positioning}</p>
-          <ul className="mt-6 grid grid-cols-2 gap-3">
-            {trust.items.map((t) => (
-              <li key={t.big} className="rounded-xl bg-white/[0.07] px-4 py-4 ring-1 ring-white/10">
+          <ul className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
+            {trust.items.map((t, i) => (
+              <li
+                key={t.big}
+                className={
+                  i === 0
+                    ? "col-span-2 rounded-xl bg-accent px-4 py-4 md:col-span-1"
+                    : "rounded-xl bg-white/[0.07] px-4 py-4 ring-1 ring-white/10"
+                }
+              >
                 <span className="block text-[34px] font-black leading-none tracking-tight text-white md:text-[40px]">
                   {t.big}
                 </span>
