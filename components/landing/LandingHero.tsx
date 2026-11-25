@@ -51,14 +51,14 @@ export function LandingHero() {
               <span aria-hidden="true" className="text-xl font-bold text-ink-faint">→</span>
               <span className="text-[48px] font-black leading-none tracking-tight text-accent">{h.priceTo}</span>
             </div>
-            <ul className="mt-4 flex flex-wrap gap-2">
+            <ul className="mt-4 flex flex-wrap gap-1.5 sm:gap-2">
               {h.chips.map((c, i) => (
                 <li
                   key={c}
                   className={
                     i === 0
-                      ? "rounded-full bg-signal-warn-soft px-3 py-1 text-[13px] font-extrabold text-signal-warn"
-                      : "rounded-full bg-accent-soft px-3 py-1 text-[13px] font-bold text-accent-strong"
+                      ? "rounded-full bg-signal-warn-soft px-2.5 py-1 text-[12px] font-extrabold text-signal-warn sm:px-3 sm:text-[13px]"
+                      : "rounded-full bg-accent-soft px-2.5 py-1 text-[12px] font-bold text-accent-strong sm:px-3 sm:text-[13px]"
                   }
                 >
                   {c}

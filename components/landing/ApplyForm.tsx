@@ -151,7 +151,7 @@ export function ApplyForm() {
                     />
                     {help && (
                       <p id={`apply-${key}-help`} className="mt-1.5 text-[12px] leading-relaxed text-ink-faint">
-                        {help}
+                        <Rich text={help} />
                       </p>
                     )}
                     {err && (
@@ -206,7 +206,7 @@ export function ApplyForm() {
                   />
                   <span>
                     <span className="font-medium text-ink">{f.privacyLabel}</span>
-                    <span className="mt-1 block text-xs leading-relaxed text-ink-faint">{f.privacyDetail}</span>
+                    <span className="mt-1 block whitespace-pre-line text-xs leading-relaxed text-ink-faint">{f.privacyDetail}</span>
                   </span>
                 </label>
                 {consentError && <p className="mt-2 text-xs text-red-500">동의 후 신청할 수 있습니다.</p>}

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { clientChats } from "@/content/landing";
+import { Rich } from "./Rich";
 
 // 실제 클라이언트 카톡을 옆으로 계속 흘려 보여줍니다.
 // 마우스를 올리거나 손가락으로 누르면 멈추고, 누르면 크게 볼 수 있습니다.
@@ -49,7 +50,9 @@ export function ClientChatMarquee() {
     <div id="client-messages" className="mt-12 scroll-mt-20">
       <div className="mx-auto max-w-[880px] px-5 md:px-8">
         <p className="text-[18px] font-extrabold text-ink md:text-[20px]">{clientChats.title}</p>
-        <p className="mt-1.5 text-[13px] leading-relaxed text-ink-faint">{clientChats.note}</p>
+        <p className="mt-1.5 text-[13px] leading-relaxed text-ink-faint">
+          <Rich text={clientChats.note} />
+        </p>
       </div>
 
       <div className="chat-marquee group/marquee relative mt-6 overflow-hidden">

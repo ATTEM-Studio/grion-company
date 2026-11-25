@@ -18,7 +18,9 @@ export function PainsSection() {
   return (
     <section className="border-b border-line bg-bg py-14 md:py-20">
       <div className={wrap}>
-        <h2 className={h2}>{pains.title}</h2>
+        <h2 className={h2}>
+          <Rich text={pains.title} />
+        </h2>
         <ul className="mt-7 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {pains.items.map((p) => (
             <li
@@ -40,7 +42,9 @@ export function ReportSection() {
     <section className="border-b border-line bg-bg-alt py-14 md:py-20">
       <div className={wrap}>
         <h2 className={h2}>{reportSection.title}</h2>
-        <p className="mt-3 text-[15px] text-ink-soft md:text-base">{reportSection.lead}</p>
+        <p className="mt-3 text-[15px] text-ink-soft md:text-base">
+          <Rich text={reportSection.lead} />
+        </p>
         <ol className="mt-8 space-y-3">
           {reportSection.items.map((r) => (
             <li key={r.no} className="rounded-2xl border border-line bg-surface p-5 md:p-6">
@@ -73,15 +77,19 @@ export function StepsSection() {
           {steps.items.map((s) => (
             <li
               key={s.no}
-              className={s.no === "3" ? "rounded-2xl border-2 border-accent bg-surface p-5" : "rounded-2xl border border-line bg-surface p-5"}
+              className={`flex gap-4 rounded-2xl bg-surface p-5 md:block ${
+                s.no === "3" ? "border-2 border-accent" : "border border-line"
+              }`}
             >
-              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-sm font-bold text-white">
+              <span className="flex h-8 w-8 flex-none items-center justify-center rounded-full bg-accent text-sm font-bold text-white">
                 {s.no}
               </span>
-              <p className="mt-3 text-[17px] font-extrabold text-ink">{s.title}</p>
-              <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">
-                <Rich text={s.body} />
-              </p>
+              <div className="md:mt-3">
+                <p className="text-[17px] font-extrabold text-ink">{s.title}</p>
+                <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">
+                  <Rich text={s.body} />
+                </p>
+              </div>
             </li>
           ))}
         </ol>
@@ -104,21 +112,21 @@ export function TrustSection() {
             <p className="text-[15px] font-extrabold tracking-wide">{trust.company}</p>
           </div>
           <p className="mt-3 text-[17px] font-bold leading-relaxed text-white/90 md:text-[19px]">{trust.positioning}</p>
-          <ul className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3">
+          <ul className="mt-6 grid grid-cols-1 gap-2.5 md:grid-cols-3 md:gap-3">
             {trust.items.map((t, i) => (
               <li
                 key={t.big}
-                className={
-                  i === 0
-                    ? "col-span-2 rounded-xl bg-accent px-4 py-4 md:col-span-1"
-                    : "rounded-xl bg-white/[0.07] px-4 py-4 ring-1 ring-white/10"
-                }
+                className={`flex items-center gap-4 rounded-xl px-4 py-4 md:block ${
+                  i === 0 ? "bg-accent" : "bg-white/[0.07] ring-1 ring-white/10"
+                }`}
               >
-                <span className="block text-[34px] font-black leading-none tracking-tight text-white md:text-[40px]">
+                <span className="w-[92px] flex-none text-[34px] font-black leading-none tracking-tight text-white md:block md:w-auto md:text-[40px]">
                   {t.big}
                 </span>
-                <span className="mt-2 block text-[14px] font-semibold text-white/85">{t.label}</span>
-                {"sub" in t && t.sub && <span className="mt-0.5 block text-[12px] text-white/55">{t.sub}</span>}
+                <span className="block md:mt-2">
+                  <span className="block text-[15px] font-semibold text-white/90 md:text-[14px]">{t.label}</span>
+                  {"sub" in t && t.sub && <span className="mt-0.5 block text-[12px] text-white/55">{t.sub}</span>}
+                </span>
               </li>
             ))}
           </ul>
@@ -126,7 +134,9 @@ export function TrustSection() {
 
         {/* 진단 기준 5단계 */}
         <div className="mt-10">
-          <p className="text-[18px] font-extrabold leading-snug text-ink md:text-[20px]">{trust.methodTitle}</p>
+          <p className="text-[18px] font-extrabold leading-snug text-ink md:text-[20px]">
+            <Rich text={trust.methodTitle} />
+          </p>
           <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">
             <Rich text={trust.methodLead} />
           </p>
@@ -191,7 +201,7 @@ export function AfterDiagnosisSection() {
         </p>
         <dl className="mt-6 overflow-hidden rounded-2xl border border-line bg-surface">
           {afterDiagnosis.rows.map((r) => (
-            <div key={r.k} className="grid grid-cols-[120px_1fr] gap-3 border-b border-line px-5 py-3.5 last:border-b-0">
+            <div key={r.k} className="grid grid-cols-[104px_1fr] gap-3 sm:grid-cols-[120px_1fr] border-b border-line px-5 py-3.5 last:border-b-0">
               <dt className="text-[14px] text-ink-faint">{r.k}</dt>
               <dd className="text-[15px] font-semibold text-ink">{r.v}</dd>
             </div>
@@ -221,7 +231,9 @@ export function LandingFinalCta() {
           {landingCta}
           <span aria-hidden="true">→</span>
         </a>
-        <p className="mt-4 text-[13px] text-white/60">{finalCtaCopy.note}</p>
+        <p className="mt-4 text-[13px] text-white/60">
+          <Rich text={finalCtaCopy.note} tone="dark" />
+        </p>
       </div>
     </section>
   );

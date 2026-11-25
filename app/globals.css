@@ -353,3 +353,20 @@ textarea,
   .chat-marquee { overflow-x: auto; }
   .chat-marquee-track { animation: none; }
 }
+
+/* 랜딩: 휴대폰에서 줄 끝에 한두 단어만 남지 않게 */
+main h1,
+main h2,
+main h3,
+.wrap-balance {
+  text-wrap: balance;
+}
+main p,
+main li,
+main dd,
+main dt,
+main label,
+main figcaption,
+main legend {
+  text-wrap: pretty;
+}
