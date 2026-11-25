@@ -89,46 +89,7 @@ export function ApplyForm() {
     }
   };
 
-  return (
-    <section id="apply" className="scroll-mt-16 border-b border-line bg-navy py-14 md:py-20">
-      <div className="mx-auto max-w-[560px] px-5 md:px-8">
-        <div className="text-center text-white">
-          <h2 className="text-[26px] font-extrabold tracking-tight sm:text-[30px]">{f.title}</h2>
-          <div className="mt-3 flex items-baseline justify-center gap-3">
-            <s className="text-lg font-semibold text-white/45 decoration-2">{f.priceFrom}</s>
-            <span aria-hidden="true" className="text-lg text-white/45">→</span>
-            <span className="text-[40px] font-black leading-none tracking-tight text-white">{f.priceTo}</span>
-          </div>
-          <p className="mt-3 text-[15px] text-white/75">
-            <Rich text={f.sub} tone="dark" />
-          </p>
-          <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-signal-warn-soft px-3.5 py-1.5 text-[13px] font-extrabold text-signal-warn">
-            <span className="scarcity-dot" aria-hidden="true" />
-            {f.scarcity}
-          </p>
-        </div>
-
-        <div className="mt-7 rounded-2xl bg-surface p-5 sm:p-7">
-          {state === "done" ? (
-            <div className="py-6 text-center" role="status">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white">✓</div>
-              <p className="mt-4 text-lg font-extrabold text-ink">{f.successTitle}</p>
-              <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{f.successBody}</p>
-            </div>
-          ) : (
-            <form onSubmit={submit} noValidate className="space-y-5">
-              <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
-                <label htmlFor="apply-website">웹사이트</label>
-                <input
-                  id="apply-website"
-                  tabIndex={-1}
-                  autoComplete="off"
-                  value={website}
-                  onChange={(e) => setWebsite(e.target.value)}
-                />
-              </div>
-
-              {fieldOrder.map((key) => {
+  const renderField = (key: Field) => {
                 const field = f.fields[key];
                 const err = errors[key];
                 const help = "help" in field ? field.help : undefined;
@@ -172,26 +133,48 @@ export function ApplyForm() {
                     )}
                   </div>
                 );
-              })}
+  };
 
-              <fieldset>
-                <legend className="text-sm font-semibold text-ink">{f.competitors.label}</legend>
-                <p className="mt-1.5 text-[12px] leading-relaxed text-ink-faint">{f.competitors.help}</p>
-                <div className="mt-2.5 space-y-2">
-                  {competitors.map((value, i) => (
-                    <input
-                      key={i}
-                      aria-label={`경쟁 매장 ${i + 1}`}
-                      value={value}
-                      onChange={(e) =>
-                        setCompetitors((prev) => prev.map((c, j) => (j === i ? e.target.value : c)))
-                      }
-                      placeholder={f.competitors.placeholder}
-                      className="focus-ring w-full rounded-lg border border-line bg-bg px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint"
-                    />
-                  ))}
-                </div>
-              </fieldset>
+  return (
+    <section id="apply" className="scroll-mt-16 border-b border-line bg-navy py-14 md:py-20">
+      <div className="mx-auto max-w-[560px] px-5 md:px-8">
+        <div className="text-center text-white">
+          <h2 className="text-[26px] font-extrabold tracking-tight sm:text-[30px]">{f.title}</h2>
+          <div className="mt-3 flex items-baseline justify-center gap-3">
+            <s className="text-lg font-semibold text-white/45 decoration-2">{f.priceFrom}</s>
+            <span aria-hidden="true" className="text-lg text-white/45">→</span>
+            <span className="text-[40px] font-black leading-none tracking-tight text-white">{f.priceTo}</span>
+          </div>
+          <p className="mt-3 text-[15px] text-white/75">
+            <Rich text={f.sub} tone="dark" />
+          </p>
+          <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-signal-warn-soft px-3.5 py-1.5 text-[13px] font-extrabold text-signal-warn">
+            <span className="scarcity-dot" aria-hidden="true" />
+            {f.scarcity}
+          </p>
+        </div>
+
+        <div className="mt-7 rounded-2xl bg-surface p-5 sm:p-7">
+          {state === "done" ? (
+            <div className="py-6 text-center" role="status">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-accent text-white">✓</div>
+              <p className="mt-4 text-lg font-extrabold text-ink">{f.successTitle}</p>
+              <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{f.successBody}</p>
+            </div>
+          ) : (
+            <form onSubmit={submit} noValidate className="space-y-5">
+              <div className="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+                <label htmlFor="apply-website">웹사이트</label>
+                <input
+                  id="apply-website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                />
+              </div>
+
+              {(["name", "company", "contact"] as Field[]).map(renderField)}
 
               <fieldset>
                 <legend className="text-sm font-semibold text-ink">{f.concernLabel}</legend>
@@ -222,6 +205,27 @@ export function ApplyForm() {
                   className="focus-ring mt-3 w-full rounded-lg border border-line bg-bg px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint"
                 />
               </fieldset>
+
+              <fieldset>
+                <legend className="text-sm font-semibold text-ink">{f.competitors.label}</legend>
+                <p className="mt-1.5 text-[12px] leading-relaxed text-ink-faint">{f.competitors.help}</p>
+                <div className="mt-2.5 space-y-2">
+                  {competitors.map((value, i) => (
+                    <input
+                      key={i}
+                      aria-label={`경쟁 매장 ${i + 1}`}
+                      value={value}
+                      onChange={(e) =>
+                        setCompetitors((prev) => prev.map((c, j) => (j === i ? e.target.value : c)))
+                      }
+                      placeholder={f.competitors.placeholder}
+                      className="focus-ring w-full rounded-lg border border-line bg-bg px-4 py-3 text-[15px] text-ink placeholder:text-ink-faint"
+                    />
+                  ))}
+                </div>
+              </fieldset>
+
+              {renderField("placeUrl")}
 
               <div>
                 <label className="flex items-start gap-3 text-sm">
