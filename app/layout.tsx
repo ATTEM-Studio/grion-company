@@ -13,12 +13,12 @@ import "./globals.css";
 // Vercel (Project → Settings → Environment Variables) and redeploy. Falls
 // back to the current live deployment URL so OG/canonical tags are correct
 // even before that's set.
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://grion-company-live-choi18.vercel.app";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://grion-place-diagnosis.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "그리온컴퍼니 | 광고를 팔지 않습니다, 성장의 순서를 설계합니다",
+    default: "무료 네이버 플레이스 진단 | 그리온컴퍼니",
     template: "%s | 그리온컴퍼니",
   },
   description:
@@ -45,19 +45,20 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     url: siteUrl,
     siteName: "GRION COMPANY",
-    title: "그리온컴퍼니 | 광고를 팔지 않습니다, 성장의 순서를 설계합니다",
+    title: "옆집보다 손님이 적은 이유, 무료로 알려드립니다 | 그리온컴퍼니",
     description:
-      "고객이 부족한지, 선택받지 못하는지, 행동으로 이어지지 않는지. 그리온은 사업의 구조를 먼저 진단합니다.",
+      "정밀진단 39,000원 → 무료. 경쟁집 비교·리뷰 분석·우선 개선 3가지를 영업일 기준 3일 안에 보내드립니다. 30팀 선착순.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "그리온컴퍼니 | 광고보다 먼저 막힌 곳부터 찾습니다",
+    title: "옆집보다 손님이 적은 이유, 무료로 알려드립니다 | 그리온컴퍼니",
     description:
-      "사업의 현재와 목표 사이의 차이를 분석하고, 무엇부터 바꿔야 하는지 설계하는 성장 파트너.",
+      "정밀진단 39,000원 → 무료. 경쟁집 비교·리뷰 분석·우선 개선 3가지를 3일 안에 보내드립니다.",
   },
+  // 광고 유입 전용 페이지라 검색 노출은 홈페이지에 맡깁니다.
   robots: {
-    index: true,
-    follow: true,
+    index: false,
+    follow: false,
   },
 };
 

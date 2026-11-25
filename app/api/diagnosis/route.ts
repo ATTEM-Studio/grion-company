@@ -21,15 +21,9 @@
 // possible failure mode for this form. Only when both fail does the visitor
 // get an error (and the details are logged so nothing disappears silently).
 
-const REQUIRED_FIELDS = [
-  "name",
-  "company",
-  "placeUrl",
-  "industry",
-  "region",
-  "contact",
-  "concern",
-] as const;
+// 랜딩 폼은 기획안대로 성함·매장명·플레이스 링크·연락처만 필수입니다.
+// (업종·지역은 플레이스 링크로 확인, 고민은 선택)
+const REQUIRED_FIELDS = ["name", "company", "placeUrl", "contact"] as const;
 
 /**
  * Field order is the contract with the spreadsheet: the Apps Script writes
@@ -55,6 +49,7 @@ const FIELD_LABELS: Record<string, string> = {
   bottleneck: "계산기가 표시한 확인 지점",
   // Appended (never inserted) so existing sheet rows keep their columns.
   placeUrl: "네이버 플레이스 링크",
+  source: "유입 경로",
 };
 
 const FIELD_ORDER = Object.keys(FIELD_LABELS);

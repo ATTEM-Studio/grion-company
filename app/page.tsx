@@ -1,48 +1,38 @@
-import { GrowthProvider } from "@/lib/growth-context";
-import { Header } from "@/components/Header";
-import { Hero } from "@/components/Hero";
-import { PlaceDiagnosisSection } from "@/components/PlaceDiagnosisSection";
-import { ProblemSection } from "@/components/ProblemSection";
-import { GrowthFlow } from "@/components/GrowthFlow";
-import { LeverSection } from "@/components/LeverSection";
-import { BudgetSection } from "@/components/BudgetSection";
-import { GrionProcess } from "@/components/GrionProcess";
-import { BottleneckSelector } from "@/components/BottleneckSelector";
-import { SolutionsSection } from "@/components/SolutionsSection";
-import { NotDoingSection } from "@/components/NotDoingSection";
-import { PhilosophySection } from "@/components/PhilosophySection";
-import { QualificationSection } from "@/components/QualificationSection";
-import { FaqSection } from "@/components/FaqSection";
-import { FinalCta } from "@/components/FinalCta";
-import { DiagnosisForm } from "@/components/DiagnosisForm";
-import { Footer } from "@/components/Footer";
-import { MobileStickyCta } from "@/components/MobileStickyCta";
+import { LandingHeader } from "@/components/landing/LandingHeader";
+import { LandingHero } from "@/components/landing/LandingHero";
+import {
+  AfterDiagnosisSection,
+  LandingFinalCta,
+  LandingFooter,
+  PainsSection,
+  ReportSection,
+  StepsSection,
+  TrustSection,
+} from "@/components/landing/LandingSections";
+import { ApplyForm } from "@/components/landing/ApplyForm";
+import { LandingFaq } from "@/components/landing/LandingFaq";
+import { LandingStickyCta } from "@/components/landing/LandingStickyCta";
 
-export default function Home() {
+// 광고 유입용 랜딩페이지 (grion-place-diagnosis 프로젝트 전용 브랜치).
+// 행동은 '무료 진단 신청' 하나만 둡니다. 홈페이지 구간(계산기·성장 구조 등)은
+// main 의 홈페이지에서 그대로 유지됩니다.
+export default function Landing() {
   return (
-    // The visitor's numbers live at the page level so the hero calculator,
-    // the lever math, and the diagnosis form all share one source of truth.
-    <GrowthProvider>
-      <Header />
+    <>
+      <LandingHeader />
       <main className="flex-1">
-        <Hero />
-        <PlaceDiagnosisSection />
-        <ProblemSection />
-        <GrowthFlow />
-        <LeverSection />
-        <BudgetSection />
-        <GrionProcess />
-        <BottleneckSelector />
-        <SolutionsSection />
-        <NotDoingSection />
-        <PhilosophySection />
-        <QualificationSection />
-        <FaqSection />
-        <FinalCta />
-        <DiagnosisForm />
+        <LandingHero />
+        <PainsSection />
+        <ReportSection />
+        <StepsSection />
+        <ApplyForm />
+        <TrustSection />
+        <AfterDiagnosisSection />
+        <LandingFaq />
+        <LandingFinalCta />
       </main>
-      <Footer />
-      <MobileStickyCta />
-    </GrowthProvider>
+      <LandingFooter />
+      <LandingStickyCta />
+    </>
   );
 }

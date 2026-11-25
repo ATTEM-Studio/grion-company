@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "그리온컴퍼니 — 매출이 멈춘 곳을 눈에 보이게 만듭니다";
+export const alt = "그리온컴퍼니 — 옆집보다 손님이 적은 이유, 무료로 알려드립니다";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -41,8 +41,8 @@ export default function Image() {
             color: "#ffffff",
           }}
         >
-          <span>매출이 멈춘 곳을</span>
-          <span style={{ color: "#b6bffa" }}>눈에 보이게 만듭니다.</span>
+          <span>옆집보다 손님이 적은 이유,</span>
+          <span style={{ color: "#b6bffa" }}>무료로 알려드립니다.</span>
         </div>
         <div
           style={{
@@ -52,7 +52,7 @@ export default function Image() {
             color: "rgba(247,248,252,0.7)",
           }}
         >
-          광고를 더하기 전에, 사업의 흐름을 확인합니다.
+          정밀진단 39,000원 → 무료 · 30팀 선착순 · 3일 안에 리포트
         </div>
       </div>
     ),
