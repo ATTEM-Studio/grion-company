@@ -6,27 +6,28 @@ export const nav = {
   items: [
     { label: "성장 구조", href: "#growth-flow" },
     { label: "일하는 방식", href: "#process" },
+    { label: "무료 진단", href: "#place-diagnosis" },
     { label: "그리온의 기준", href: "#standard" },
     { label: "자주 묻는 질문", href: "#faq" },
   ],
-  cta: "성장진단 시작하기",
+  cta: "무료 플레이스 진단",
   ctaHref: "#diagnosis",
 };
 
 export const hero = {
-  eyebrow: "GRION / GROWTH OPERATING SYSTEM",
-  headline: ["매출이 멈춘 곳을", "눈에 보이게", "만듭니다."],
+  eyebrow: "GRION / FREE PLACE DIAGNOSIS",
+  headline: ["우리 가게,", "옆집보다 손님이 적은 이유를", "무료로 알려드립니다."],
   /** The word that gets the accent color in the headline. */
-  headlineAccentLine: 1,
+  headlineAccentLine: 2,
   sub: [
-    "광고를 더하기 전에, 사업의 흐름을 확인합니다.",
-    "그리온은 현재와 목표 사이의 병목을 찾아 다음 행동으로 바꿉니다.",
+    "매장명과 플레이스 링크만 주시면, 경쟁집 비교·리뷰 분석·우선 개선 3가지를 영업일 기준 3일 안에 보내드립니다.",
+    "순위가 아니라 실제 손님 수와 매출 기준으로 봅니다.",
   ],
-  primaryCta: "내 사업 성장 진단하기",
+  primaryCta: "무료 플레이스 진단 신청하기",
   primaryCtaHref: "#diagnosis",
   secondaryCta: "내 숫자로 계산해보기",
   secondaryCtaHref: "#growth-calculator",
-  trustMicro: "광고가 필요하지 않다고 판단되면 광고를 제안하지 않습니다.",
+  trustMicro: "정밀진단 39,000원 → 무료 · 30팀 선착순, 마감 시 종료 · 매장당 1회",
   tags: ["진단", "전략설계", "마케팅 실행", "성장관리"],
   calcHint: "현재 매출과 목표부터 입력해 보세요. 결과를 본 뒤 다음 계산을 선택할 수 있습니다.",
 };
@@ -91,6 +92,38 @@ export const growthFlow = {
     },
   ],
   closing: ["모든 숫자를 동시에 바꾸지 않습니다.", "지금 가장 큰 차이를 만들 수 있는", "한 지점부터 찾습니다."],
+};
+
+export const placeDiagnosis = {
+  eyebrow: "FREE / NAVER PLACE DIAGNOSIS",
+  headline: ["광고비 쓰기 전에,", "무엇부터 고칠지 먼저 확인하세요."],
+  lead: "네이버 플레이스를 운영하는 매장이라면 무료로 신청할 수 있습니다. 리포트만 받고 끝내셔도 됩니다.",
+  reportTitle: "리포트에 담기는 3가지",
+  report: [
+    { no: "01 / 03", title: "경쟁집 비교", body: "우리 매장과 주변 경쟁 매장의 차이를 데이터로 보여드립니다." },
+    { no: "02 / 03", title: "리뷰·키워드 분석", body: "손님이 남긴 리뷰와 검색 키워드를 보고 무엇이 선택을 가르는지 정리합니다." },
+    { no: "03 / 03", title: "우선 개선 3가지", body: "지금 가장 먼저 고칠 것 3가지를 순서대로 알려드립니다." },
+  ],
+  basis: "순위가 아니라 실제 손님 수와 매출 기준으로 봅니다.",
+  flow: ["노출", "유입", "방문", "객단가", "재방문"],
+  termsTitle: "진행 방식과 조건",
+  terms: [
+    { k: "진행", v: "온라인 비대면 진행. 매장명과 플레이스 링크만 있으면 됩니다." },
+    { k: "전달", v: "리포트는 카톡 또는 메일로, 영업일 기준 3일 안에 보내드립니다." },
+    { k: "대상", v: "네이버 플레이스에 등록된 오프라인 매장" },
+    { k: "횟수", v: "무료 진단은 매장당 1회입니다." },
+  ],
+  offerTitle: "가격과 혜택",
+  offers: [
+    { k: "플레이스 정밀진단", strike: "39,000원", v: "무료", note: "30팀 신청이 차면 마감합니다." },
+    { k: "진단 후 마케팅관리를 시작하시면", strike: "", v: "첫 달 30만 원", note: "2달째부터 월 60만 원(부가세 별도). 광고 집행비는 별도입니다." },
+  ],
+  trustTitle: "누가 진단하나요",
+  trust: [
+    { big: "5년", label: "마케팅 실무 경험" },
+    { big: "2년", label: "정부지원사업 공급업체 운영 (브랜딩, 마케팅, 컨설팅)" },
+  ],
+  cta: "무료 플레이스 진단 신청하기",
 };
 
 export const calculator = {
@@ -305,20 +338,24 @@ export const faq = {
   headline: ["결정하기 전에", "궁금하실 만한 것들입니다."],
   items: [
     {
+      q: "무료라더니 영업 전화가 오는 건 아닌가요?",
+      a: "리포트만 받고 끝내셔도 됩니다. 상담은 원하시는 분만 진행합니다.",
+    },
+    {
       q: "진단만 받고 실행은 직접 해도 되나요?",
       a: "네. 진단 결과와 우선순위는 그대로 가져가시면 됩니다. 실행을 맡기실지는 그다음에 정하셔도 됩니다.",
     },
     {
       q: "비용은 어떻게 되나요?",
-      a: "사업 상황과 필요한 실행 범위에 따라 달라져, 진단 상담에서 먼저 안내드립니다. 안내받은 내용을 확인하시기 전까지는 아무것도 진행되지 않습니다.",
+      a: "플레이스 진단은 무료입니다(정밀진단 원래 39,000원, 30팀 선착순, 매장당 1회). 진단 후 마케팅관리를 시작하시면 첫 달만 30만 원, 2달째부터 월 60만 원(부가세 별도)이며 광고 집행비는 별도입니다. 약정 조건은 상담 전에 투명하게 안내드리고, 안내받은 내용을 확인하시기 전까지는 아무것도 진행되지 않습니다.",
     },
     {
       q: "진단 신청 후 얼마나 걸리나요?",
-      a: "신청 후 영업일 기준 1~2일 내에 담당자가 연락드리고, 이후 상담을 통해 병목과 우선순위를 함께 확인합니다.",
+      a: "신청 후 영업일 기준 3일 안에 진단 리포트(경쟁집 비교, 리뷰·키워드 분석, 우선 개선 3가지)를 카톡 또는 메일로 보내드립니다. 상담은 리포트를 보신 뒤 원하실 때 진행합니다.",
     },
     {
       q: "우리 업종도 가능한가요?",
-      a: "요식업, 카페, 병·의원, 법률·세무·노무 등 전문서비스, 뷰티, 헬스장, 학원, 지역 기반 서비스업처럼 고객의 선택이 매출로 이어지는 사업이라면, 업종에 관계없이 함께 진단할 수 있습니다.",
+      a: "요식업, 카페, 병·의원, 법률·세무·노무 등 전문서비스, 뷰티, 헬스장, 학원, 지역 기반 서비스업처럼 고객의 선택이 매출로 이어지는 사업이라면, 업종에 관계없이 함께 진단할 수 있습니다. 무료 플레이스 진단은 네이버 플레이스에 등록된 오프라인 매장이면 신청할 수 있습니다.",
     },
   ],
 };
@@ -332,26 +369,27 @@ export const finalCta = {
     "한 명의 고객이 충분한 가치를 만드는지.",
     "다시 선택받고 있는지.",
   ],
-  bodyClosing: "현재 사업의 성장 구조를 그리온과 함께 확인해보세요.",
-  primaryCta: "내 사업 성장 진단하기",
-  duration: "약 3~5분",
+  bodyClosing: "우리 매장이 어디에서 막혀 있는지, 무료 플레이스 진단으로 먼저 확인해보세요.",
+  primaryCta: "무료 플레이스 진단 신청하기",
+  duration: "정밀진단 39,000원 → 무료 · 30팀 선착순 · 매장당 1회",
   microCopy: "진단 결과에 따라 광고보다 다른 개선이 먼저 필요하다고 안내드릴 수 있습니다.",
 };
 
 export const diagnosisForm = {
-  title: "성장진단 시작하기",
-  subtitle: "지금 사업이 어디에서 막혀 있는지, 그리온이 함께 확인합니다.",
+  title: "무료 플레이스 진단 신청",
+  subtitle: "매장명과 플레이스 링크만 주시면, 영업일 기준 3일 안에 진단 리포트를 카톡 또는 메일로 보내드립니다.",
   step1Title: "기본 정보",
-  step2Title: "사업 현황 (선택)",
+  step2Title: "매장 현황 (선택)",
   fields: {
     name: { label: "대표자 또는 담당자명", placeholder: "홍길동", required: true },
-    company: { label: "업체명", placeholder: "그리온컴퍼니", required: true },
+    company: { label: "매장명", placeholder: "예: 그리온 식당 강남점", required: true },
+    placeUrl: { label: "네이버 플레이스 링크", placeholder: "예: https://naver.me/xxxxxx", required: true },
     industry: { label: "업종", placeholder: "예: 요식업, 병·의원, 카페, 뷰티 등", required: true },
     region: { label: "지역", placeholder: "예: 서울 강남구", required: true },
-    contact: { label: "연락처", placeholder: "010-0000-0000", required: true },
+    contact: { label: "연락처 (카톡 또는 메일로 리포트 발송)", placeholder: "010-0000-0000 또는 이메일", required: true },
     concern: {
-      label: "현재 가장 큰 고민",
-      placeholder: "예: 문의는 오는데 계약으로 이어지지 않습니다.",
+      label: "가장 고민되는 점",
+      placeholder: "예: 플레이스 순위가 오르지 않아요 / 광고비 대비 효과를 모르겠어요 / 재방문 손님이 적어요",
       required: true,
     },
     revenueCurrent: { label: "현재 월평균 매출", placeholder: "예: 3,000만원", required: false },
@@ -364,13 +402,13 @@ export const diagnosisForm = {
   },
   privacyLabel: "개인정보 수집 및 이용에 동의합니다.",
   privacyDetail:
-    "입력하신 정보는 성장 진단 상담 목적으로만 사용되며, 진단 완료 후 별도 요청 시 파기됩니다. 민감한 고객·환자·의뢰인 정보는 입력하지 않아도 됩니다.",
-  submit: "진단 신청하기",
+    "입력하신 정보는 진단 리포트 발송과 상담 목적으로만 사용되며, 진단 완료 후 별도 요청 시 파기됩니다. 민감한 고객·환자·의뢰인 정보는 입력하지 않아도 됩니다.",
+  submit: "무료 진단 신청하기",
   step2Skip: "선택 항목 건너뛰고 제출하기",
   next: "다음",
   back: "이전",
   successTitle: "신청이 접수되었습니다.",
-  successBody: "영업일 기준 1~2일 이내에 담당자가 남겨주신 연락처로 안내드립니다.",
+  successBody: "영업일 기준 3일 안에 카톡 또는 메일로 진단 리포트를 보내드립니다.",
 };
 
 export const footer = {

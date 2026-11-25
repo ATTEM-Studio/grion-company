@@ -1,6 +1,7 @@
 import { GrowthProvider } from "@/lib/growth-context";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
+import { PlaceDiagnosisSection } from "@/components/PlaceDiagnosisSection";
 import { ProblemSection } from "@/components/ProblemSection";
 import { GrowthFlow } from "@/components/GrowthFlow";
 import { LeverSection } from "@/components/LeverSection";
@@ -25,6 +26,7 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
+        <PlaceDiagnosisSection />
         <ProblemSection />
         <GrowthFlow />
         <LeverSection />

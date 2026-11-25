@@ -9,7 +9,7 @@ import { formatNumber } from "@/lib/growth";
 import { formatPlanMoney } from "@/lib/growth-planner";
 import { Reveal } from "./Reveal";
 
-type RequiredField = "name" | "company" | "industry" | "region" | "contact" | "concern";
+type RequiredField = "name" | "company" | "placeUrl" | "industry" | "region" | "contact" | "concern";
 type OptionalField =
   | "revenueCurrent"
   | "revenueGoal"
@@ -24,6 +24,7 @@ type FormState = Record<RequiredField | OptionalField, string>;
 const requiredFields: RequiredField[] = [
   "name",
   "company",
+  "placeUrl",
   "industry",
   "region",
   "contact",
@@ -43,6 +44,7 @@ const optionalFields: OptionalField[] = [
 const emptyState: FormState = {
   name: "",
   company: "",
+  placeUrl: "",
   industry: "",
   region: "",
   contact: "",
@@ -240,7 +242,9 @@ export function DiagnosisForm() {
                       ) : (
                         <input
                           id={key}
-                          type={key === "contact" ? "tel" : "text"}
+                          type={key === "placeUrl" ? "url" : "text"}
+                          inputMode={key === "placeUrl" ? "url" : undefined}
+                          autoComplete={key === "placeUrl" ? "url" : undefined}
                           value={values[key]}
                           onChange={(e) => update(key, e.target.value)}
                           placeholder={field.placeholder}

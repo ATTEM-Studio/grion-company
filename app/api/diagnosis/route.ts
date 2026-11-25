@@ -24,6 +24,7 @@
 const REQUIRED_FIELDS = [
   "name",
   "company",
+  "placeUrl",
   "industry",
   "region",
   "contact",
@@ -52,6 +53,8 @@ const FIELD_LABELS: Record<string, string> = {
   // Carried over from the hero growth calculator when the visitor used it.
   aovEntered: "객단가 (계산기 입력)",
   bottleneck: "계산기가 표시한 확인 지점",
+  // Appended (never inserted) so existing sheet rows keep their columns.
+  placeUrl: "네이버 플레이스 링크",
 };
 
 const FIELD_ORDER = Object.keys(FIELD_LABELS);
@@ -131,7 +134,7 @@ async function deliverByEmail(body: Record<string, unknown>): Promise<boolean> {
 
   const html = `
     <div style="font-family:sans-serif;font-size:14px;color:#10122b">
-      <h2 style="margin:0 0 16px">새 성장진단 신청이 도착했습니다</h2>
+      <h2 style="margin:0 0 16px">새 무료 플레이스 진단 신청이 도착했습니다</h2>
       <table style="border-collapse:collapse">${rows}</table>
     </div>
   `;
@@ -146,7 +149,7 @@ async function deliverByEmail(body: Record<string, unknown>): Promise<boolean> {
       body: JSON.stringify({
         from: fromAddress,
         to: [notifyTo],
-        subject: `[성장진단 신청] ${asText(body.company)} — ${asText(body.name)}`,
+        subject: `[플레이스 진단 신청] ${asText(body.company)} — ${asText(body.name)}`,
         html,
       }),
     });
