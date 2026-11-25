@@ -17,8 +17,8 @@ function validate(key: Field, raw: string): string | undefined {
   if (key === "placeUrl" && !/naver\./i.test(v)) {
     return "네이버 지도에서 복사한 링크(naver.me 또는 map.naver.com)를 붙여 주세요.";
   }
-  if (key === "contact" && !v.includes("@") && v.replace(/\D/g, "").length < 9) {
-    return "휴대폰 번호나 이메일을 정확히 적어 주세요.";
+  if (key === "contact" && !/^01[016789]\d{7,8}$/.test(v.replace(/\D/g, ""))) {
+    return "휴대폰 번호를 정확히 적어 주세요. (예: 010-1234-5678)";
   }
   return undefined;
 }

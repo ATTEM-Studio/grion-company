@@ -183,6 +183,11 @@ export async function POST(request: Request) {
     }
   }
 
+  // Contact must be a Korean mobile number (the form no longer accepts email).
+  if (!/^01[016789]\d{7,8}$/.test(asText(body.contact).replace(/\D/g, ""))) {
+    return Response.json({ error: "invalid_contact" }, { status: 400 });
+  }
+
   const [sheetOk, emailOk] = await Promise.all([
     deliverToSheet(body),
     deliverByEmail(body),

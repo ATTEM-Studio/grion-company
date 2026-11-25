@@ -108,8 +108,8 @@ export const applyForm = {
       help: "없으셔도 신청할 수 있습니다. 있으면 우리 매장을 더 정확히 확인할 수 있습니다.\n네이버 지도에서 ‘공유’ → ‘링크 복사’ 후 붙여넣어 주세요.",
     },
     contact: {
-      label: "리포트 받을 연락처",
-      placeholder: "카톡 되는 휴대폰 번호 또는 이메일",
+      label: "리포트 받을 휴대폰 번호",
+      placeholder: "카톡 되는 휴대폰 번호 (예: 010-1234-5678)",
     },
   },
   competitors: {
