@@ -94,25 +94,81 @@ export function TrustSection() {
   return (
     <section className="border-b border-line bg-bg-alt py-14 md:py-20">
       <div className={wrap}>
-        <h2 className={h2}>{trust.title}</h2>
-        <ul className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {trust.items.map((t) => (
-            <li key={t.big} className="rounded-2xl border border-line bg-surface px-5 py-5">
-              <span className="block text-[30px] font-extrabold tracking-tight text-accent">{t.big}</span>
-              <span className="mt-1 block text-[15px] text-ink-soft">{t.label}</span>
-            </li>
-          ))}
-        </ul>
-        <ul className="mt-5 space-y-2">
+        <p className="text-[12px] font-bold tracking-[0.18em] text-accent">{trust.eyebrow}</p>
+        <h2 className={`${h2} mt-2`}>{trust.title}</h2>
+
+        {/* 회사 카드 */}
+        <div className="depth-dark relative mt-7 overflow-hidden rounded-2xl bg-navy p-6 text-white md:p-8">
+          <div className="flex items-center gap-2.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-accent-line" aria-hidden="true" />
+            <p className="text-[15px] font-extrabold tracking-wide">{trust.company}</p>
+          </div>
+          <p className="mt-3 text-[17px] font-bold leading-relaxed text-white/90 md:text-[19px]">{trust.positioning}</p>
+          <ul className="mt-6 grid grid-cols-2 gap-3">
+            {trust.items.map((t) => (
+              <li key={t.big} className="rounded-xl bg-white/[0.07] px-4 py-4 ring-1 ring-white/10">
+                <span className="block text-[34px] font-black leading-none tracking-tight text-white md:text-[40px]">
+                  {t.big}
+                </span>
+                <span className="mt-2 block text-[14px] font-semibold text-white/85">{t.label}</span>
+                {"sub" in t && t.sub && <span className="mt-0.5 block text-[12px] text-white/55">{t.sub}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* 진단 기준 5단계 */}
+        <div className="mt-10">
+          <p className="text-[18px] font-extrabold leading-snug text-ink md:text-[20px]">{trust.methodTitle}</p>
+          <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">
+            <Rich text={trust.methodLead} />
+          </p>
+          <ol className="relative mt-6 grid grid-cols-1 gap-2.5 md:grid-cols-5 md:gap-3">
+            {trust.steps.map((st) => (
+              <li
+                key={st.no}
+                className="flex gap-4 rounded-2xl border border-line bg-surface p-4 md:flex-col md:gap-3 md:p-5"
+              >
+                <span className="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-accent text-[13px] font-black text-white">
+                  {st.no}
+                </span>
+                <div>
+                  <p className="text-[16px] font-extrabold text-ink">{st.plain}</p>
+                  <span className="mt-1 inline-block rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-bold text-accent-strong">
+                    {st.name}
+                  </span>
+                  <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{st.check}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-3 text-right text-[12px] font-semibold text-ink-faint">{trust.methodName}</p>
+        </div>
+
+        {/* 약속 */}
+        <ul className="mt-8 space-y-2.5 rounded-2xl border border-line bg-surface p-5 md:p-6">
           {trust.promises.map((p) => (
-            <li key={p} className="flex gap-2.5 text-[15px] font-semibold text-ink">
-              <span className="text-accent" aria-hidden="true">✓</span>
+            <li key={p} className="flex gap-3 text-[15px] text-ink">
+              <span
+                className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full bg-accent text-[11px] text-white"
+                aria-hidden="true"
+              >
+                ✓
+              </span>
               <span>
                 <Rich text={p} />
               </span>
             </li>
           ))}
         </ul>
+
+        <a
+          href="#client-messages"
+          className="focus-ring mt-6 inline-flex items-center gap-1.5 text-[15px] font-bold text-accent hover:text-accent-strong"
+        >
+          {trust.proofLink}
+          <span aria-hidden="true">↓</span>
+        </a>
       </div>
     </section>
   );

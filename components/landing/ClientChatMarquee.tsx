@@ -46,7 +46,7 @@ export function ClientChatMarquee() {
   );
 
   return (
-    <div className="mt-12">
+    <div id="client-messages" className="mt-12 scroll-mt-20">
       <div className="mx-auto max-w-[880px] px-5 md:px-8">
         <p className="text-[18px] font-extrabold text-ink md:text-[20px]">{clientChats.title}</p>
         <p className="mt-1.5 text-[13px] leading-relaxed text-ink-faint">{clientChats.note}</p>
