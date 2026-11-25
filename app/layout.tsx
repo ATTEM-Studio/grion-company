@@ -18,7 +18,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://grion-place-diagnos
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "무료 네이버 플레이스 진단 | 그리온컴퍼니",
+    default: "우리 업장 정밀진단 무료 | 그리온컴퍼니",
     template: "%s | 그리온컴퍼니",
   },
   description:
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     "그리온컴퍼니",
     "그리온",
     "GRION COMPANY",
+    "우리 업장 정밀진단",
     "네이버 플레이스 진단",
-    "무료 플레이스 진단",
     "사업 성장 진단",
     "마케팅 전략",
     "마케팅 컨설팅",
@@ -47,13 +47,13 @@ export const metadata: Metadata = {
     siteName: "GRION COMPANY",
     title: "옆집보다 손님이 적은 이유, 무료로 알려드립니다 | 그리온컴퍼니",
     description:
-      "정밀진단 39,000원 → 무료. 경쟁집 비교·리뷰 분석·우선 개선 3가지를 영업일 기준 3일 안에 보내드립니다. 30팀 선착순.",
+      "우리 업장 정밀진단 39,000원 → 무료. 경쟁집 비교·리뷰 분석·우선 개선 3가지를 영업일 기준 3일 안에 보내드립니다. 30팀 선착순.",
   },
   twitter: {
     card: "summary_large_image",
     title: "옆집보다 손님이 적은 이유, 무료로 알려드립니다 | 그리온컴퍼니",
     description:
-      "정밀진단 39,000원 → 무료. 경쟁집 비교·리뷰 분석·우선 개선 3가지를 3일 안에 보내드립니다.",
+      "우리 업장 정밀진단 39,000원 → 무료. 경쟁집 비교·리뷰 분석·우선 개선 3가지를 3일 안에 보내드립니다.",
   },
   // 광고 유입 전용 페이지라 검색 노출은 홈페이지에 맡깁니다.
   robots: {

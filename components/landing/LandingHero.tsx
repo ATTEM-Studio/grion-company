@@ -43,7 +43,7 @@ export function LandingHero() {
           {/* 가격 강조 카드 */}
           <div className="mt-6 rounded-2xl border-2 border-accent bg-surface p-5 shadow-[0_16px_40px_-24px_rgba(43,63,234,0.6)]">
             <div className="flex items-center justify-between">
-              <span className="text-[14px] font-bold text-ink-soft">{h.priceLabel}</span>
+              <span className="text-[16px] font-extrabold text-ink">{h.priceLabel}</span>
               <span className="rounded-full bg-accent px-3 py-1 text-[12px] font-extrabold text-white">무료</span>
             </div>
             <div className="mt-1.5 flex items-baseline gap-3">

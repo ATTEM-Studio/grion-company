@@ -4,7 +4,7 @@ export function ReportPreview({ caption }: { caption: string }) {
     <figure className="w-full">
       <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_24px_60px_-28px_rgba(16,18,43,0.35)]">
         <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
-          <span className="text-[13px] font-extrabold tracking-tight text-ink">플레이스 진단 리포트</span>
+          <span className="text-[13px] font-extrabold tracking-tight text-ink">우리 업장 정밀진단 리포트</span>
           <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-[11px] font-semibold text-accent-strong">
             예시
           </span>
