@@ -1,3 +1,6 @@
+import { rpc, supabaseConfigured } from "@/lib/supabase";
+
+// (2026-11-26) 신청 원본은 Supabase에 먼저 저장합니다. 시트·메일은 보조 채널입니다.
 // Receives Growth-Diagnosis form submissions and delivers them to two
 // independent places:
 //
@@ -112,6 +115,33 @@ async function deliverToSheet(body: Record<string, unknown>): Promise<boolean> {
   }
 }
 
+/** Saves the submission in Supabase (RLS-locked table, written through a DB function). */
+async function deliverToSupabase(body: Record<string, unknown>): Promise<boolean> {
+  if (!supabaseConfigured()) return false;
+  try {
+    const known = ["name", "company", "contact", "concern", "placeUrl", "competitors", "source"];
+    const extra = Object.fromEntries(
+      FIELD_ORDER.filter((k) => !known.includes(k) && asText(body[k])).map((k) => [k, asText(body[k])])
+    );
+    await rpc("submit_application", {
+      p: {
+        name: asText(body.name),
+        company: asText(body.company),
+        contact: asText(body.contact),
+        concern: asText(body.concern),
+        placeurl: asText(body.placeUrl),
+        competitors: asText(body.competitors),
+        source: asText(body.source),
+        extra,
+      },
+    });
+    return true;
+  } catch (err) {
+    console.error("[api/diagnosis] Supabase save failed", err);
+    return false;
+  }
+}
+
 /** Sends the notification email through Resend. */
 async function deliverByEmail(body: Record<string, unknown>): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
@@ -188,12 +218,13 @@ export async function POST(request: Request) {
     return Response.json({ error: "invalid_contact" }, { status: 400 });
   }
 
-  const [sheetOk, emailOk] = await Promise.all([
+  const [dbOk, sheetOk, emailOk] = await Promise.all([
+    deliverToSupabase(body),
     deliverToSheet(body),
     deliverByEmail(body),
   ]);
 
-  if (!sheetOk && !emailOk) {
+  if (!dbOk && !sheetOk && !emailOk) {
     // Everything the visitor typed, in the log, so a misconfiguration
     // never means a permanently lost lead.
     console.error(
@@ -203,5 +234,5 @@ export async function POST(request: Request) {
     return Response.json({ error: "delivery_failed" }, { status: 502 });
   }
 
-  return Response.json({ ok: true, sheet: sheetOk, email: emailOk });
+  return Response.json({ ok: true, db: dbOk, sheet: sheetOk, email: emailOk });
 }
