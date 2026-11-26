@@ -244,7 +244,6 @@ export function LandingFooter() {
     <footer className="bg-navy-deep py-10 text-[13px] text-white/50">
       <div className="mx-auto max-w-[1120px] space-y-1 px-5 md:px-8">
         <p className="font-bold text-white/80">그리온컴퍼니 (GRION COMPANY)</p>
-        <p>문의 hello@grioncompany.com</p>
         <p>© {new Date().getFullYear()} GRION COMPANY</p>
       </div>
     </footer>
