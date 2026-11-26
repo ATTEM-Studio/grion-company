@@ -25,9 +25,9 @@ export default function Landing() {
         <PainsSection />
         <ReportSection />
         <StepsSection />
+        <AfterDiagnosisSection />
         <ApplyForm />
         <TrustSection />
-        <AfterDiagnosisSection />
         <LandingFaq />
         <LandingFinalCta />
       </main>
