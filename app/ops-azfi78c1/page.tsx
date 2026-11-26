@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { adminConfigured, isAdmin } from "@/lib/admin-auth";
 import { rpc, statusLabels, type ApplicationRow, type ApplicationStatus } from "@/lib/supabase";
 import { LoginForm } from "./LoginForm";
@@ -21,6 +22,8 @@ const kstDay = (iso: string) => new Date(iso).toLocaleDateString("sv-SE", { time
 type Search = Promise<{ q?: string; status?: string }>;
 
 export default async function AdminPage({ searchParams }: { searchParams: Search }) {
+  // 빌드 때 미리 만들어 두지 않고, 요청마다 로그인 여부를 확인합니다.
+  await connection();
   if (!adminConfigured()) {
     return (
       <Shell>
