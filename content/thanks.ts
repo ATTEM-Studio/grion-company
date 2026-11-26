@@ -7,9 +7,11 @@
 // 비워 두면 상담 버튼과 하단 떠 있는 버튼이 화면에 나타나지 않습니다.
 export const kakaoChannelUrl = "";
 
-// 첫 달 30만 원 혜택의 신청 기한 (예: "2026-12-31까지"). 대표가 기한을 정하면 입력합니다.
-// 비워 두면 기한 줄이 나타나지 않습니다. 실제로 지킬 기한만 적습니다. (정해지지 않은 기한을 만들어 쓰지 않음)
-export const offerDeadline: string = "";
+// 첫 달 30만 원 혜택의 신청 기한: 이 페이지를 처음 본 날부터 3주(21일). (대표 확정 2026-11-26)
+// 방문일은 이 브라우저(localStorage)에만 저장하고, 새로고침해도 기한이 밀리지 않습니다.
+// 0으로 바꾸면 기한 줄이 나타나지 않습니다.
+export const offerWindowDays = 21;
+export const firstVisitKey = "grion:thanks-first-visit";
 
 // 신청 직후 같은 브라우저에서만 쓰는 값입니다. 매장명을 주소(URL)에 싣지 않으려고 sessionStorage에 둡니다.
 export const applicantKey = "grion:applicant";

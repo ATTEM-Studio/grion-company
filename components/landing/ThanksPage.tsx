@@ -2,7 +2,6 @@ import Image from "next/image";
 import { trust } from "@/content/landing";
 import {
   kakaoChannelUrl,
-  offerDeadline,
   thanksAuthority,
   thanksExclusive,
   thanksGift,
@@ -13,6 +12,7 @@ import {
   thanksValue,
 } from "@/content/thanks";
 import { Rich } from "./Rich";
+import { OfferDeadline } from "./OfferDeadline";
 import { ThanksTitle } from "./ThanksTitle";
 
 const wrap = "relative mx-auto max-w-[880px] px-5 md:px-8";
@@ -179,12 +179,13 @@ export function ThanksOffer() {
           <p className="mt-2 text-[13px] font-semibold text-ink-soft">시작하시는 첫 달 기준</p>
           <p className="mt-4 text-[14px] leading-relaxed text-ink-soft">{thanksExclusive.note}</p>
           <dl className="mt-6 overflow-hidden rounded-xl border border-line text-left">
-            {[...thanksOffer.rows, ...(offerDeadline ? [{ k: "신청 기한", v: offerDeadline }] : [])].map((r) => (
+            {thanksOffer.rows.map((r) => (
               <div key={r.k} className="grid grid-cols-[104px_1fr] gap-3 border-b border-line px-4 py-3 last:border-b-0 sm:grid-cols-[120px_1fr]">
                 <dt className="text-[14px] text-ink-faint">{r.k}</dt>
                 <dd className="text-[15px] font-semibold text-ink">{r.v}</dd>
               </div>
             ))}
+            <OfferDeadline />
           </dl>
           <p className="mt-5 text-[14px] leading-relaxed text-ink">
             <Rich text={thanksExclusive.how} />
