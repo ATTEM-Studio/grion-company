@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { applyForm as f } from "@/content/landing";
 import { cn } from "@/lib/utils";
 import { Rich } from "./Rich";
@@ -35,6 +36,7 @@ function sourceLabel(): string {
 }
 
 export function ApplyForm() {
+  const router = useRouter();
   const [values, setValues] = useState<Record<Field, string>>({ name: "", company: "", placeUrl: "", contact: "" });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [competitors, setCompetitors] = useState<string[]>(Array(COMPETITOR_SLOTS).fill(""));
@@ -83,6 +85,8 @@ export function ApplyForm() {
       });
       if (!res.ok) throw new Error(`request failed: ${res.status}`);
       setState("done");
+      // 저장에 성공했을 때만 땡큐 페이지로 이동합니다.
+      router.push("/thanks");
     } catch (err) {
       console.error("[ApplyForm] submission failed", err);
       setState("error");
