@@ -1,8 +1,10 @@
 import { BlobPreconditionFailedError, del, get, list, put } from "@vercel/blob";
 
-// Vercel Blob(Private) 도우미. 연결 값(BLOB_READ_WRITE_TOKEN)은 Vercel이 프로젝트에 넣어 주고
-// @vercel/blob이 자동으로 읽습니다. 코드에 토큰을 적지 않습니다.
-export const blobConnected = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+// Vercel Blob(Private) 도우미. 연결 값은 Vercel이 프로젝트에 넣어 주고 @vercel/blob이 자동으로 읽습니다.
+// 연결 방식은 두 가지: 토큰(BLOB_READ_WRITE_TOKEN) 또는 저장 공간 ID(BLOB_STORE_ID, OIDC 인증).
+// 코드에 토큰을 적지 않습니다.
+export const blobConnected = () =>
+  Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 
 export async function readJson<T>(pathname: string): Promise<{ data: T; etag: string } | null> {
   const res = await get(pathname, { access: "private", useCache: false });
