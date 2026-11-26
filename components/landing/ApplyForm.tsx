@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { applyForm as f } from "@/content/landing";
+import { applicantKey } from "@/content/thanks";
 import { cn } from "@/lib/utils";
 import { Rich } from "./Rich";
 
@@ -85,6 +86,12 @@ export function ApplyForm() {
       });
       if (!res.ok) throw new Error(`request failed: ${res.status}`);
       setState("done");
+      // 땡큐 페이지에서 매장명으로 인사하려고 이 브라우저 탭에만 잠깐 둡니다. 주소에는 싣지 않습니다.
+      try {
+        sessionStorage.setItem(applicantKey, values.company.trim().slice(0, 30));
+      } catch {
+        /* 저장할 수 없어도 신청에는 영향이 없습니다. */
+      }
       // 저장에 성공했을 때만 땡큐 페이지로 이동합니다.
       router.push("/thanks");
     } catch (err) {

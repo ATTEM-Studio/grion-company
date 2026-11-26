@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { LandingFooter } from "@/components/landing/LandingSections";
+import { KakaoFloat } from "@/components/landing/KakaoFloat";
 import {
-  KakaoFloat,
+  ThanksAuthority,
+  ThanksGift,
   ThanksHeader,
   ThanksHero,
   ThanksOffer,
@@ -21,8 +23,10 @@ export default function ThanksPage() {
       <ThanksHeader />
       <main>
         <ThanksHero />
+        <ThanksGift />
         <ThanksProcess />
         <ThanksValue />
+        <ThanksAuthority />
         <ThanksOffer />
       </main>
       <LandingFooter />
