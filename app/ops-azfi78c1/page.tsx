@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { connection } from "next/server";
 import { adminConfigured, isAdmin } from "@/lib/admin-auth";
 import { rpc, statusLabels, type ApplicationRow, type ApplicationStatus } from "@/lib/supabase";
+import { blobConnected } from "@/lib/blob-store";
+import { kstMonth, loadVisitStats, readPixelId } from "@/lib/visits";
 import { LoginForm } from "./LoginForm";
+import { VisitStats } from "./VisitStats";
 import { logout, updateApplication } from "./actions";
 
 // 링크로 연결하지 않는 관리자 화면입니다. 검색에 잡히지 않게 막습니다.
@@ -19,7 +22,7 @@ const kst = (iso: string) =>
 
 const kstDay = (iso: string) => new Date(iso).toLocaleDateString("sv-SE", { timeZone: "Asia/Seoul" });
 
-type Search = Promise<{ q?: string; status?: string }>;
+type Search = Promise<{ q?: string; status?: string; month?: string }>;
 
 export default async function AdminPage({ searchParams }: { searchParams: Search }) {
   // 빌드 때 미리 만들어 두지 않고, 요청마다 로그인 여부를 확인합니다.
@@ -41,7 +44,9 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
     );
   }
 
-  const { q = "", status = "" } = await searchParams;
+  const { q = "", status = "", month: monthParam = "" } = await searchParams;
+  const month = /^\d{4}-\d{2}$/.test(monthParam) ? monthParam : kstMonth();
+  const [visitView, pixelId] = await Promise.all([loadVisitStats(month), readPixelId()]);
   let rows: ApplicationRow[] = [];
   let loadError = "";
   try {
@@ -63,7 +68,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
   return (
     <main className="mx-auto w-full max-w-5xl px-4 py-8">
       <div className="flex items-center justify-between gap-3">
-        <h1 className="text-xl font-extrabold text-ink">신청자 현황</h1>
+        <h1 className="text-xl font-extrabold text-ink">관리자</h1>
         <div className="flex items-center gap-2">
           <a href={`${ADMIN_PATH}/export`} className="rounded-lg border border-line px-3 py-2 text-sm font-semibold text-ink">
             CSV 받기
@@ -74,7 +79,10 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
         </div>
       </div>
 
-      <dl className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <VisitStats view={visitView} month={month} blobOk={blobConnected()} passwordOk={adminConfigured()} pixelId={pixelId} />
+
+      <h2 className="mt-10 text-lg font-extrabold text-ink">신청자 현황</h2>
+      <dl className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {stats.map((s) => (
           <div key={s.label} className="rounded-xl border border-line bg-white p-4">
             <dt className="text-[13px] text-ink-faint">{s.label}</dt>

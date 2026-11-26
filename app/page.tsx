@@ -12,6 +12,7 @@ import {
 import { ApplyForm } from "@/components/landing/ApplyForm";
 import { LandingFaq } from "@/components/landing/LandingFaq";
 import { LandingStickyCta } from "@/components/landing/LandingStickyCta";
+import { VisitTracker } from "@/components/landing/VisitTracker";
 
 // 광고 유입용 랜딩페이지 (grion-place-diagnosis 프로젝트 전용 브랜치).
 // 행동은 '무료 진단 신청' 하나만 둡니다. 홈페이지 구간(계산기·성장 구조 등)은
@@ -33,6 +34,7 @@ export default function Landing() {
       </main>
       <LandingFooter />
       <LandingStickyCta />
+      <VisitTracker />
     </>
   );
 }

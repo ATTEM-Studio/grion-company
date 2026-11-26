@@ -18,6 +18,10 @@ export function LoginForm() {
         required
         className="w-full rounded-xl border border-line bg-white px-4 py-3 text-base text-ink outline-none focus:border-accent"
       />
+      <label className="flex items-center gap-2 text-sm text-ink-soft">
+        <input type="checkbox" name="remember" className="h-4 w-4" />
+        이 기기에서 로그인 유지(90일)
+      </label>
       {state?.error && <p role="alert" className="text-sm font-semibold text-red-600">{state.error}</p>}
       <button
         type="submit"

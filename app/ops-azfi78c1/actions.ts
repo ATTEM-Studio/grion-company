@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { checkPassword, endSession, isAdmin, startSession } from "@/lib/admin-auth";
 import { rpc, type ApplicationStatus } from "@/lib/supabase";
+import { readPixelId, savePixelId } from "@/lib/visits";
 
 const ADMIN_PATH = "/ops-azfi78c1";
 const STATUSES: ApplicationStatus[] = ["new", "contacted", "consulting", "started", "closed"];
@@ -31,7 +32,7 @@ export async function login(_prev: { error?: string } | undefined, formData: For
     await new Promise((r) => setTimeout(r, 1200));
     return { error: "비밀번호가 맞지 않습니다." };
   }
-  await startSession();
+  await startSession(formData.get("remember") === "on");
   redirect(ADMIN_PATH);
 }
 
@@ -53,4 +54,17 @@ export async function updateApplication(formData: FormData) {
     p_memo: memo,
   });
   revalidatePath(ADMIN_PATH);
+}
+
+// 메타 픽셀 ID(숫자만) 저장. 저장한 뒤 다시 읽은 값이 화면에 보입니다. 비우면 픽셀을 끕니다.
+export async function savePixel(_prev: { saved?: string; error?: string } | undefined, formData: FormData) {
+  if (!(await isAdmin())) redirect(ADMIN_PATH);
+  const raw = String(formData.get("pixelId") ?? "").trim();
+  if (raw && !/^\d{5,20}$/.test(raw)) return { error: "숫자만 5~20자리로 적어 주세요." };
+  try {
+    await savePixelId(raw);
+    return { saved: await readPixelId() };
+  } catch {
+    return { error: "저장하지 못했어요. 저장 공간 연결을 확인해 주세요." };
+  }
 }

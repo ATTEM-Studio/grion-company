@@ -228,6 +228,7 @@ export function LandingFinalCta() {
         </h2>
         <a
           href={formHref}
+          data-track="last-cta"
           className="focus-ring mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-base font-bold text-accent-strong transition-colors hover:bg-accent-soft"
         >
           {landingCta}
