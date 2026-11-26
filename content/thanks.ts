@@ -3,9 +3,9 @@
 //  - 진행 순서: 정본 '무엇을 누구에게 얼마에' 핵심 흐름
 //  - 매달 제공 건수·외주비 포함 여부·계약 기간은 정본상 '확인 필요'라 숫자로 쓰지 않습니다.
 
-// 카카오톡 채널 채팅 주소 (예: https://pf.kakao.com/_xxxxxx/chat). 대표 확인 후 입력합니다.
+// 카카오톡 채널 채팅 주소 (오픈채팅: https://open.kakao.com/me/grion_company, 대표 제공 2026-11-26). 대표 확인 후 입력합니다.
 // 비워 두면 상담 버튼과 하단 떠 있는 버튼이 화면에 나타나지 않습니다.
-export const kakaoChannelUrl = "";
+export const kakaoChannelUrl = "https://open.kakao.com/me/grion_company";
 
 // 첫 달 30만 원 혜택의 신청 기한: 이 페이지를 처음 본 날부터 3주(21일). (대표 확정 2026-11-26)
 // 방문일은 이 브라우저(localStorage)에만 저장하고, 새로고침해도 기한이 밀리지 않습니다.
